@@ -656,22 +656,20 @@ button{cursor:pointer;border:0}
 
 
     <!-- NOTIFICATIONS -->
+<section id="notificationsPage" class="page">
 
-    <section id="notificationsPage" class="page">
+  <div class="card">
+    <h2 style="margin-bottom:15px">🔔 Notifications</h2>
 
-      <div class="card">
-
-        <h2 style="margin-bottom:10px">
-          Notifications 🔔
-        </h2>
-
-        <div class="empty">
-          No new notifications.
-        </div>
-
+    <div id="notificationsList">
+      <div class="empty">
+        Loading notifications...
       </div>
+    </div>
+  </div>
 
-    </section>
+</section>
+
 
 
     <!-- PROFILE -->
@@ -3399,6 +3397,104 @@ async function loadMyFriends(){
      .innerHTML = "";
 
  }
+  /* =====================================================
+   NOTIFICATIONS SYSTEM
+===================================================== */
+
+async function loadNotifications(){
+
+  const box =
+    document.getElementById("notificationsList");
+
+  if(!box) return;
+
+  const {
+    data:{user}
+  } =
+    await supabaseClient.auth.getUser();
+
+  if(!user) return;
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("notifications")
+      .select("*")
+      .eq("user_id",user.id)
+      .order("created_at",{ascending:false})
+      .limit(50);
+
+  if(error){
+    box.innerHTML =
+      escapeHTML(error.message);
+    return;
+  }
+
+  if(!data.length){
+
+    box.innerHTML = `
+      <div class="empty">
+        You have no notifications yet. 🔔
+      </div>
+    `;
+
+    return;
+  }
+
+  box.innerHTML = "";
+
+  for(const notification of data){
+
+    box.innerHTML += `
+
+      <div
+        style="
+          padding:14px 5px;
+          border-bottom:1px solid #eee;
+          background:${notification.is_read ? "white" : "#eef5ff"};
+          cursor:pointer;"
+        onclick="markNotificationRead('${notification.id}')">
+
+        <div style="font-size:15px">
+          ${escapeHTML(notification.message)}
+        </div>
+
+        <div
+          style="
+            color:#65676b;
+            font-size:12px;
+            margin-top:5px;">
+          ${new Date(notification.created_at).toLocaleString()}
+        </div>
+
+      </div>
+
+    `;
+  }
+}
+
+
+async function markNotificationRead(id){
+
+  const {
+    error
+  } =
+    await supabaseClient
+      .from("notifications")
+      .update({
+        is_read:true
+      })
+      .eq("id",id);
+
+  if(error){
+    console.log(error);
+    return;
+  }
+
+  await loadNotifications();
+}
 /* =====================================================
    NAVIGATION
 ===================================================== */
@@ -3420,7 +3516,10 @@ function showPage(pageId){
     page.classList.add("active");
 
   }
-
+  
+if(pageId === "notificationsPage"){
+  loadNotifications();
+}
 
   document.querySelectorAll(".nav-btn")
     .forEach(btn=>{
