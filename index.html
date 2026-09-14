@@ -577,6 +577,7 @@ button{cursor:pointer;border:0}
         onclick="showPage('profilePage');loadProfile()">
         👤
       </button>
+      
 
     </div>
 
@@ -780,19 +781,59 @@ button{cursor:pointer;border:0}
 
     <!-- FRIENDS -->
 
-    <section id="friendsPage" class="page">
+  <section id="friendsPage" class="page">
 
-      <div class="card">
+  <div class="card">
 
-        <h2>Friends 👥</h2>
+    <h2 style="margin-bottom:15px">
+      Friends 👥
+    </h2>
 
-        <div class="empty">
-          No friends yet.
-        </div>
+    <input
+      id="friendSearch"
+      class="search-input"
+      placeholder="Search people..."
+      oninput="searchFriends()">
 
+    <div id="friendResults">
+      <div class="empty">
+        Search for people to add as friends.
       </div>
+    </div>
 
-    </section>
+  </div>
+
+
+  <div class="card">
+
+    <h3 style="margin-bottom:10px">
+      Friend Requests 📩
+    </h3>
+
+    <div id="friendRequests">
+      <div class="empty">
+        Loading requests...
+      </div>
+    </div>
+
+  </div>
+
+
+  <div class="card">
+
+    <h3 style="margin-bottom:10px">
+      My Friends 👥
+    </h3>
+
+    <div id="myFriends">
+      <div class="empty">
+        Loading friends...
+      </div>
+    </div>
+
+  </div>
+
+</section>
 
 
     <!-- SETTINGS -->
@@ -2425,7 +2466,533 @@ async function searchUsers(){
   });
 
 }
+/* =====================================================
+   FRIENDS SYSTEM
+===================================================== */
 
+async function searchFriends(){
+
+  const search =
+    document.getElementById("friendSearch")
+      .value.trim();
+
+  const results =
+    document.getElementById("friendResults");
+
+  if(!search){
+
+    results.innerHTML = `
+      <div class="empty">
+        Search for people to add as friends.
+      </div>
+    `;
+
+    return;
+  }
+
+
+  const {
+    data:{user}
+  } =
+    await supabaseClient.auth.getUser();
+
+
+  if(!user) return;
+
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("profiles")
+      .select("id,full_name,username,avatar_url")
+      .neq("id",user.id)
+      .or(
+        `full_name.ilike.%${search}%,username.ilike.%${search}%`
+      )
+      .limit(20);
+
+
+  if(error){
+
+    results.innerHTML =
+      escapeHTML(error.message);
+
+    return;
+  }
+
+
+  if(!data.length){
+
+    results.innerHTML = `
+      <div class="empty">
+        No people found.
+      </div>
+    `;
+
+    return;
+  }
+
+
+  results.innerHTML = "";
+
+
+  for(const person of data){
+
+    const name =
+      person.full_name ||
+      person.username ||
+      "KidusBook User";
+
+
+    const letter =
+      name.charAt(0).toUpperCase();
+
+
+    results.innerHTML += `
+
+      <div style="
+        display:flex;
+        align-items:center;
+        gap:10px;
+        padding:10px 0;
+        border-bottom:1px solid #eee;">
+
+        <div class="avatar">
+
+          ${
+            person.avatar_url
+            ?
+            `<img src="${escapeHTML(person.avatar_url)}">`
+            :
+            letter
+          }
+
+        </div>
+
+        <div style="flex:1">
+
+          <strong>
+            ${escapeHTML(name)}
+          </strong>
+
+          <div style="color:#65676b">
+            @${escapeHTML(person.username || "")}
+          </div>
+
+        </div>
+
+        <button
+          onclick="sendFriendRequest('${person.id}')"
+          style="
+            background:#1877f2;
+            color:white;
+            padding:9px 12px;
+            border-radius:7px;">
+          Add Friend
+        </button>
+
+      </div>
+
+    `;
+
+  }
+
+}
+
+
+async function sendFriendRequest(receiverId){
+
+  const {
+    data:{user}
+  } =
+    await supabaseClient.auth.getUser();
+
+
+  if(!user){
+
+    alert("Please log in first.");
+
+    return;
+  }
+
+
+  const {
+    data:existing
+  } =
+    await supabaseClient
+      .from("friend_requests")
+      .select("id,status")
+      .eq("sender_id",user.id)
+      .eq("receiver_id",receiverId)
+      .maybeSingle();
+
+
+  if(existing){
+
+    alert(
+      "Friend request already sent."
+    );
+
+    return;
+  }
+
+
+  const {
+    data:reverse
+  } =
+    await supabaseClient
+      .from("friend_requests")
+      .select("id,status")
+      .eq("sender_id",receiverId)
+      .eq("receiver_id",user.id)
+      .maybeSingle();
+
+
+  if(reverse){
+
+    alert(
+      "This person already sent you a friend request."
+    );
+
+    return;
+  }
+
+
+  const {
+    error
+  } =
+    await supabaseClient
+      .from("friend_requests")
+      .insert({
+
+        sender_id:user.id,
+
+        receiver_id:receiverId,
+
+        status:"pending"
+
+      });
+
+
+  if(error){
+
+    alert(error.message);
+
+    return;
+  }
+
+
+  alert(
+    "Friend request sent successfully! 👥"
+  );
+
+}
+
+
+async function loadFriendRequests(){
+
+  const box =
+    document.getElementById("friendRequests");
+
+  if(!box) return;
+
+
+  const {
+    data:{user}
+  } =
+    await supabaseClient.auth.getUser();
+
+
+  if(!user) return;
+
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("friend_requests")
+      .select("*")
+      .eq("receiver_id",user.id)
+      .eq("status","pending")
+      .order("created_at",{ascending:false});
+
+
+  if(error){
+
+    box.innerHTML =
+      escapeHTML(error.message);
+
+    return;
+  }
+
+
+  if(!data.length){
+
+    box.innerHTML = `
+      <div class="empty">
+        No pending friend requests.
+      </div>
+    `;
+
+    return;
+  }
+
+
+  box.innerHTML = "";
+
+
+  for(const request of data){
+
+    const {
+      data:person
+    } =
+      await supabaseClient
+        .from("profiles")
+        .select("full_name,username,avatar_url")
+        .eq("id",request.sender_id)
+        .maybeSingle();
+
+
+    const name =
+      person?.full_name ||
+      person?.username ||
+      "KidusBook User";
+
+
+    box.innerHTML += `
+
+      <div style="
+        display:flex;
+        align-items:center;
+        gap:10px;
+        padding:10px 0;
+        border-bottom:1px solid #eee;">
+
+        <div style="flex:1">
+
+          <strong>
+            ${escapeHTML(name)}
+          </strong>
+
+          <div style="color:#65676b">
+            wants to be your friend
+          </div>
+
+        </div>
+
+        <button
+          onclick="acceptFriendRequest('${request.id}')"
+          style="
+            background:#1877f2;
+            color:white;
+            padding:8px 12px;
+            border-radius:7px;">
+          Accept
+        </button>
+
+        <button
+          onclick="rejectFriendRequest('${request.id}')"
+          style="
+            background:#e4e6eb;
+            padding:8px 12px;
+            border-radius:7px;">
+          Delete
+        </button>
+
+      </div>
+
+    `;
+
+  }
+
+}
+
+
+async function acceptFriendRequest(requestId){
+
+  const {
+    error
+  } =
+    await supabaseClient
+      .from("friend_requests")
+      .update({
+        status:"accepted"
+      })
+      .eq("id",requestId);
+
+
+  if(error){
+
+    alert(error.message);
+
+    return;
+  }
+
+
+  alert("Friend request accepted! 🎉");
+
+  await loadFriendRequests();
+
+  await loadMyFriends();
+
+}
+
+
+async function rejectFriendRequest(requestId){
+
+  const {
+    error
+  } =
+    await supabaseClient
+      .from("friend_requests")
+      .delete()
+      .eq("id",requestId);
+
+
+  if(error){
+
+    alert(error.message);
+
+    return;
+  }
+
+
+  await loadFriendRequests();
+
+}
+
+
+async function loadMyFriends(){
+
+  const box =
+    document.getElementById("myFriends");
+
+  if(!box) return;
+
+
+  const {
+    data:{user}
+  } =
+    await supabaseClient.auth.getUser();
+
+
+  if(!user) return;
+
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("friend_requests")
+      .select("*")
+      .eq("status","accepted");
+
+
+  if(error){
+
+    box.innerHTML =
+      escapeHTML(error.message);
+
+    return;
+  }
+
+
+  const friends =
+    data.filter(request =>
+      request.sender_id === user.id ||
+      request.receiver_id === user.id
+    );
+
+
+  if(!friends.length){
+
+    box.innerHTML = `
+      <div class="empty">
+        You don't have any friends yet.
+      </div>
+    `;
+
+    return;
+  }
+
+
+  box.innerHTML = "";
+
+
+  for(const friendship of friends){
+
+    const friendId =
+      friendship.sender_id === user.id
+      ?
+      friendship.receiver_id
+      :
+      friendship.sender_id;
+
+
+    const {
+      data:person
+    } =
+      await supabaseClient
+        .from("profiles")
+        .select("full_name,username,avatar_url")
+        .eq("id",friendId)
+        .maybeSingle();
+
+
+    const name =
+      person?.full_name ||
+      person?.username ||
+      "KidusBook User";
+
+
+    const letter =
+      name.charAt(0).toUpperCase();
+
+
+    box.innerHTML += `
+
+      <div style="
+        display:flex;
+        align-items:center;
+        gap:10px;
+        padding:10px 0;
+        border-bottom:1px solid #eee;">
+
+        <div class="avatar">
+
+          ${
+            person?.avatar_url
+            ?
+            `<img src="${escapeHTML(person.avatar_url)}">`
+            :
+            letter
+          }
+
+        </div>
+
+        <div>
+
+          <strong>
+            ${escapeHTML(name)}
+          </strong>
+
+          <div style="color:#65676b">
+            @${escapeHTML(person?.username || "")}
+          </div>
+
+        </div>
+
+      </div>
+
+    `;
+
+  }
+
+}
 
 /* =====================================================
    NAVIGATION
@@ -2464,7 +3031,16 @@ function showPage(pageId){
   if(pageId==="friendsPage")
     document.getElementById("navFriends")
       .classList.add("active");
+  
+if(pageId==="friendsPage")
+  document.getElementById("navFriends")
+    .classList.add("active");
 
+
+if(pageId==="friendsPage"){
+  loadFriendRequests();
+  loadMyFriends();
+}
 
   if(pageId==="chatPage")
     document.getElementById("navChat")
