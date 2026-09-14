@@ -9,11 +9,13 @@
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
+
 body{
   font-family:Arial,sans-serif;
   background:#f0f2f5;
   color:#1c1e21;
 }
+
 button,input,textarea{font:inherit}
 button{cursor:pointer;border:0}
 
@@ -35,103 +37,118 @@ button{cursor:pointer;border:0}
 }
 
 .logo{
-  text-align:center;
   color:#1877f2;
-  font-size:36px;
+  text-align:center;
+  font-size:38px;
   font-weight:bold;
-  margin-bottom:8px;
+  margin-bottom:10px;
 }
 
-.tagline{
+.subtitle{
   text-align:center;
   color:#65676b;
-  margin-bottom:25px;
+  margin-bottom:20px;
 }
 
-.auth-box input{
+.auth-box input,
+.auth-box textarea{
   width:100%;
   padding:13px;
-  margin-bottom:12px;
+  margin:7px 0;
   border:1px solid #ddd;
-  border-radius:7px;
+  border-radius:8px;
   outline:none;
+}
+
+.auth-box input:focus,
+.auth-box textarea:focus{
+  border-color:#1877f2;
 }
 
 .primary{
   width:100%;
-  padding:13px;
   background:#1877f2;
   color:white;
-  border-radius:7px;
+  padding:13px;
+  border-radius:8px;
   font-weight:bold;
-}
-
-.secondary{
-  width:100%;
-  padding:12px;
   margin-top:10px;
+}
+
+.green{
   background:#42b72a;
-  color:white;
-  border-radius:7px;
-  font-weight:bold;
 }
 
-.error{
-  color:#d93025;
-  margin:10px 0;
+.auth-message{
   text-align:center;
+  margin-top:12px;
+  color:#d00;
 }
 
-.success{
-  color:#188038;
-  margin:10px 0;
+.auth-switch{
   text-align:center;
+  margin-top:18px;
+  color:#1877f2;
+  cursor:pointer;
 }
 
-.app{display:none}
+.app{
+  display:none;
+  min-height:100vh;
+}
 
 .header{
   position:sticky;
   top:0;
-  z-index:100;
+  z-index:20;
+  background:white;
   height:60px;
-  background:#1877f2;
-  color:white;
   display:flex;
   align-items:center;
+  justify-content:space-between;
   padding:0 15px;
+  box-shadow:0 1px 4px #ccc;
 }
 
 .header-logo{
+  color:#1877f2;
   font-size:25px;
   font-weight:bold;
-  margin-right:auto;
 }
 
-.header button{
+.header-icons{
+  display:flex;
+  gap:8px;
+}
+
+.icon-btn{
   width:40px;
   height:40px;
   border-radius:50%;
-  margin-left:6px;
-  background:white;
-  color:#1877f2;
+  background:#f0f2f5;
+  font-size:19px;
 }
 
-.container{
-  max-width:680px;
+.main{
+  max-width:650px;
   margin:auto;
-  padding:15px 10px 75px;
+  padding:15px 10px 80px;
 }
 
-.page{display:none}
-.page.active{display:block}
+.page{
+  display:none;
+}
+
+.page.active{
+  display:block;
+}
 
 .card{
   background:white;
   border-radius:10px;
+  padding:15px;
   margin-bottom:12px;
-  box-shadow:0 1px 3px #ccc;
-  overflow:hidden;
+  box-shadow:0 1px 3px #ddd;
 }
 
 .welcome{
@@ -139,16 +156,38 @@ button{cursor:pointer;border:0}
   padding:20px;
 }
 
-.welcome h1{
-  color:#1877f2;
-  margin-bottom:5px;
-}
-
-.create{
-  padding:12px;
+.create-box{
   display:flex;
   gap:10px;
   align-items:center;
+}
+
+.small-avatar{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  background:#1877f2;
+  color:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:bold;
+}
+
+.create-input{
+  flex:1;
+  background:#f0f2f5;
+  border-radius:22px;
+  padding:12px 16px;
+  color:#65676b;
+  cursor:pointer;
+}
+
+.post-head{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:12px;
 }
 
 .avatar{
@@ -158,31 +197,23 @@ button{cursor:pointer;border:0}
   background:#1877f2;
   color:white;
   display:flex;
-  justify-content:center;
   align-items:center;
+  justify-content:center;
+  font-size:20px;
+  font-weight:bold;
+  overflow:hidden;
+}
+
+.avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.post-user{
   font-weight:bold;
 }
 
-.create-input{
-  flex:1;
-  background:#f0f2f5;
-  padding:13px 18px;
-  border-radius:25px;
-  color:#65676b;
-  cursor:pointer;
-}
-
-.post{
-  padding:15px;
-}
-
-.post-head{
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-.post-user{font-weight:bold}
 .post-time{
   color:#65676b;
   font-size:12px;
@@ -190,21 +221,24 @@ button{cursor:pointer;border:0}
 }
 
 .post-text{
-  padding:15px 0;
-  line-height:1.5;
   white-space:pre-wrap;
+  word-break:break-word;
+  margin:12px 0;
+  line-height:1.5;
 }
 
 .actions{
-  border-top:1px solid #ddd;
   display:flex;
-  padding-top:5px;
+  border-top:1px solid #eee;
+  padding-top:8px;
+  gap:5px;
 }
 
 .actions button{
   flex:1;
   background:white;
-  padding:10px;
+  padding:10px 4px;
+  border-radius:6px;
   color:#65676b;
 }
 
@@ -212,46 +246,35 @@ button{cursor:pointer;border:0}
   background:#f0f2f5;
 }
 
-.title{
-  font-size:24px;
-  font-weight:bold;
-  margin-bottom:15px;
-}
-
-.menu-item{
-  padding:17px;
-  border-bottom:1px solid #eee;
-  display:flex;
-  align-items:center;
-  gap:12px;
-}
-
-.menu-item:last-child{border:0}
-
-.bottom{
+.bottom-nav{
   position:fixed;
   bottom:0;
   left:0;
   right:0;
   height:62px;
   background:white;
-  border-top:1px solid #ddd;
   display:flex;
-  justify-content:center;
-  z-index:100;
+  justify-content:space-around;
+  align-items:center;
+  box-shadow:0 -1px 5px #ccc;
+  z-index:30;
 }
 
-.bottom button{
-  flex:1;
-  max-width:130px;
+.nav-btn{
   background:white;
   color:#65676b;
-  font-size:12px;
+  text-align:center;
+  font-size:21px;
+  padding:5px;
 }
 
-.bottom button span{
+.nav-btn span{
   display:block;
-  font-size:22px;
+  font-size:10px;
+}
+
+.nav-btn.active{
+  color:#1877f2;
 }
 
 .modal{
@@ -259,431 +282,706 @@ button{cursor:pointer;border:0}
   position:fixed;
   inset:0;
   background:rgba(0,0,0,.55);
-  z-index:200;
+  z-index:100;
   align-items:center;
   justify-content:center;
   padding:15px;
 }
 
-.modal.show{display:flex}
-
 .modal-box{
   width:100%;
-  max-width:550px;
+  max-width:500px;
   background:white;
   border-radius:12px;
   padding:18px;
 }
 
-.modal textarea{
-  width:100%;
-  min-height:160px;
-  border:0;
-  outline:0;
-  resize:none;
-  padding:15px 0;
+.modal-title{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:15px;
 }
 
 .close{
-  float:right;
-  border-radius:50%;
   width:35px;
   height:35px;
-  background:#eee;
+  border-radius:50%;
+  background:#f0f2f5;
 }
 
-.logout{
+.modal textarea{
   width:100%;
-  background:#d93025;
-  color:white;
+  min-height:130px;
+  resize:none;
+  border:1px solid #ddd;
+  border-radius:8px;
   padding:12px;
+  outline:none;
+}
+
+.profile-cover{
+  height:180px;
+  border-radius:10px 10px 0 0;
+  background:#1877f2;
+  background-size:cover;
+  background-position:center;
+  position:relative;
+}
+
+.cover-button{
+  position:absolute;
+  right:10px;
+  bottom:10px;
+  background:white;
+  padding:8px 12px;
   border-radius:7px;
+}
+
+.profile-card{
+  background:white;
+  border-radius:10px;
+  overflow:hidden;
+  margin-bottom:12px;
+}
+
+.profile-info{
+  padding:0 18px 18px;
+}
+
+.profile-avatar{
+  width:100px;
+  height:100px;
+  border-radius:50%;
+  background:#1877f2;
+  border:4px solid white;
+  margin-top:-50px;
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  color:white;
+  font-size:40px;
+  font-weight:bold;
+}
+
+.profile-avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.profile-name{
+  font-size:24px;
+  font-weight:bold;
+  margin-top:8px;
+}
+
+.profile-username{
+  color:#65676b;
+  margin:4px 0;
+}
+
+.bio{
+  margin:10px 0;
+}
+
+.edit-btn{
+  background:#e4e6eb;
+  padding:10px 16px;
+  border-radius:7px;
+  font-weight:bold;
+}
+
+.menu-item{
+  padding:15px;
+  border-bottom:1px solid #eee;
+}
+
+.menu-item:last-child{
+  border-bottom:0;
+}
+
+.search-input{
+  width:100%;
+  padding:13px;
+  border:1px solid #ddd;
+  border-radius:8px;
+  margin-bottom:12px;
+}
+
+.empty{
+  text-align:center;
+  padding:30px;
+  color:#65676b;
+}
+
+.comment-box{
+  padding-top:10px;
+}
+
+.comment{
+  background:#f0f2f5;
+  padding:8px 12px;
+  border-radius:15px;
+  margin:6px 0;
+}
+
+.comment strong{
+  font-size:14px;
+}
+
+.comment-form{
+  display:flex;
+  gap:6px;
+  margin-top:8px;
+}
+
+.comment-form input{
+  flex:1;
+  padding:10px;
+  border:1px solid #ddd;
+  border-radius:20px;
+}
+
+.comment-form button{
+  background:#1877f2;
+  color:white;
+  padding:10px 14px;
+  border-radius:20px;
+}
+
+.file-input{
+  margin:10px 0;
+  width:100%;
+}
+
+@media(max-width:500px){
+  .header-logo{font-size:22px}
+  .profile-cover{height:150px}
 }
 </style>
 </head>
 
 <body>
 
-<!-- LOGIN / SIGNUP -->
+<!-- ================= AUTH ================= -->
+
 <div id="authScreen" class="auth">
 
   <div class="auth-box">
 
     <div class="logo">KidusBook</div>
-    <div class="tagline">Connect with friends and share your world.</div>
+
+    <div class="subtitle">
+      Connect with people on KidusBook
+    </div>
 
     <div id="loginForm">
 
-      <input id="loginEmail"
-             type="email"
-             placeholder="Email">
+      <input
+        id="loginEmail"
+        type="email"
+        placeholder="Email">
 
-      <input id="loginPassword"
-             type="password"
-             placeholder="Password">
+      <input
+        id="loginPassword"
+        type="password"
+        placeholder="Password">
 
-      <div id="loginMessage"></div>
-
-      <button class="primary" onclick="login()">
+      <button
+        class="primary"
+        onclick="login()">
         Log In
       </button>
 
-      <button class="secondary" onclick="showSignup()">
-        Create New Account
-      </button>
+      <div
+        class="auth-switch"
+        onclick="showSignup()">
+        Create new account
+      </div>
 
     </div>
+
 
     <div id="signupForm" style="display:none">
 
-      <input id="signupName"
-             type="text"
-             placeholder="Full name">
+      <input
+        id="signupName"
+        type="text"
+        placeholder="Full name">
 
-      <input id="signupUsername"
-             type="text"
-             placeholder="Username">
+      <input
+        id="signupUsername"
+        type="text"
+        placeholder="Username">
 
-      <input id="signupEmail"
-             type="email"
-             placeholder="Email">
+      <input
+        id="signupEmail"
+        type="email"
+        placeholder="Email">
 
-      <input id="signupPassword"
-             type="password"
-             placeholder="Password">
+      <input
+        id="signupPassword"
+        type="password"
+        placeholder="Password">
 
-      <div id="signupMessage"></div>
-
-      <button class="primary" onclick="signup()">
+      <button
+        class="primary green"
+        onclick="signup()">
         Create Account
       </button>
 
-      <button class="secondary" onclick="showLogin()">
-        Already have an account? Log In
-      </button>
+      <div
+        class="auth-switch"
+        onclick="showLogin()">
+        Already have an account? Log in
+      </div>
 
     </div>
 
+    <div id="authMessage" class="auth-message"></div>
+
   </div>
+
 </div>
 
 
-<!-- MAIN APP -->
+<!-- ================= APP ================= -->
+
 <div id="app" class="app">
 
-<header class="header">
-  <div class="header-logo">KidusBook</div>
+  <header class="header">
 
-  <button onclick="showPage('search')">🔍</button>
-  <button onclick="showPage('notifications')">🔔</button>
-  <button onclick="showPage('profile')">👤</button>
-</header>
-
-
-<main class="container">
-
-<!-- HOME -->
-<section id="home" class="page active">
-
-  <div class="card welcome">
-    <h1>Welcome to KidusBook</h1>
-    <p id="welcomeName"></p>
-  </div>
-
-  <div class="card create">
-    <div class="avatar" id="createAvatar">K</div>
-
-    <div class="create-input"
-         onclick="openPostModal()">
-      What's on your mind?
+    <div class="header-logo">
+      KidusBook
     </div>
-  </div>
 
-  <div id="posts"></div>
+    <div class="header-icons">
 
-</section>
+      <button
+        class="icon-btn"
+        onclick="showPage('searchPage')">
+        🔍
+      </button>
 
+      <button
+        class="icon-btn"
+        onclick="showPage('notificationsPage')">
+        🔔
+      </button>
 
-<!-- SEARCH -->
-<section id="search" class="page">
+      <button
+        class="icon-btn"
+        onclick="showPage('profilePage');loadProfile()">
+        👤
+      </button>
 
-  <div class="title">Search</div>
-
-  <div class="card">
-    <div class="menu-item">
-      🔍 Search coming next.
     </div>
-  </div>
 
-</section>
+  </header>
 
 
-<!-- PROFILE -->
-<section id="profile" class="page">
+  <main class="main">
 
-  <div class="title">My Profile</div>
 
-  <div class="card">
+    <!-- HOME -->
 
-   <div id="coverPhoto"
-     style="
-       height:180px;
-       background:linear-gradient(135deg,#1877f2,#42b72a);
-       background-size:cover;
-       background-position:center;
-       position:relative;
-     ">
+    <section id="homePage" class="page active">
 
-  <input
-    type="file"
-    id="coverFile"
-    accept="image/*"
-    style="display:none"
-    onchange="uploadCover()">
+      <div class="card welcome">
 
-  <button
-    onclick="document.getElementById('coverFile').click()"
-    style="
-      position:absolute;
-      right:12px;
-      bottom:12px;
-      background:white;
-      color:#1877f2;
-      padding:9px 14px;
-      border-radius:7px;
-      font-weight:bold;
-    ">
-    📷 Change Cover
-  </button>
+        <h2>Welcome to KidusBook 👋</h2>
 
-</div> 
-  </div>
+        <p style="margin-top:8px;color:#65676b">
+          Share your thoughts with the world.
+        </p>
 
-    <div style="text-align:center;padding:20px">
-
-      <div class="avatar"
-           id="profileAvatar"
-           style="
-             width:90px;
-             height:90px;
-             margin:-60px auto 10px;
-             border:5px solid white;
-             font-size:35px;
-           ">
-        
       </div>
-      
-<input
-  type="file"
-  id="avatarFile"
-  accept="image/*"
-  style="display:none"
-  onchange="uploadAvatar()">
-
-<button
-  class="primary"
-  style="max-width:220px;margin:10px auto"
-  onclick="document.getElementById('avatarFile').click()">
-  📷 Change Profile Photo
-</button>
-      <h2 id="profileName">User</h2>
-
-  <p id="profileUsername"></p>
-
-<button
-  class="primary"
-  style="max-width:220px;margin-top:15px;"
-  onclick="openEditProfile()">
-  ✏️ Edit Profile
-</button>
-
-</div>    
-
-      
-  </div>
-
-  <div class="card">
-
-    <div class="menu-item">
-      👤 <span id="profileEmail"></span>
-    </div>
-
-    <div class="menu-item">
-      📝 <span id="profileBio">Welcome to KidusBook.</span>
-    </div>
-
-    <div class="menu-item">
-      <button class="logout" onclick="logout()">
-        Log Out
-      </button>
-    </div>
-
-  </div>
-
-</section>
 
 
-<!-- NOTIFICATIONS -->
-<section id="notifications" class="page">
+      <div class="card">
 
-  <div class="title">Notifications</div>
+        <div class="create-box">
 
-  <div class="card">
-    <div class="menu-item">
-      🔔 Welcome to KidusBook!
-    </div>
-  </div>
+          <div id="homeAvatar" class="small-avatar">
+            K
+          </div>
 
-</section>
+          <div
+            class="create-input"
+            onclick="openPostModal()">
+            What's on your mind?
+          </div>
 
+        </div>
 
-<!-- FRIENDS -->
-<section id="friends" class="page">
-
-  <div class="title">Friends</div>
-
-  <div class="card">
-    <div class="menu-item">
-      👥 Friends feature coming next.
-    </div>
-  </div>
-
-</section>
+      </div>
 
 
-<!-- CHAT -->
-<section id="chat" class="page">
+      <div id="posts">
 
-  <div class="title">Messenger</div>
+        <div class="card empty">
+          Loading posts...
+        </div>
 
-  <div class="card">
-    <div class="menu-item">
-      💬 Messenger feature coming next.
-    </div>
-  </div>
+      </div>
 
-</section>
+    </section>
 
 
-<!-- MENU -->
-<section id="menu" class="page">
+    <!-- SEARCH -->
 
-  <div class="title">Menu</div>
+    <section id="searchPage" class="page">
 
-  <div class="card">
+      <div class="card">
 
-    <div class="menu-item">
-      ⚙️ Settings
-    </div>
+        <h2 style="margin-bottom:15px">
+          Search
+        </h2>
 
-    <div class="menu-item">
-      🔒 Privacy
-    </div>
+        <input
+          id="searchInput"
+          class="search-input"
+          placeholder="Search KidusBook..."
+          oninput="searchUsers()">
 
-    <div class="menu-item">
-      ℹ️ KidusBook Version 2.0
-    </div>
+        <div id="searchResults"></div>
 
-    <div class="menu-item">
-      <button class="logout" onclick="logout()">
-        Log Out
-      </button>
-    </div>
+      </div>
 
-  </div>
-
-</section>
-
-</main>
+    </section>
 
 
-<!-- BOTTOM NAV -->
-<nav class="bottom">
+    <!-- NOTIFICATIONS -->
 
-  <button onclick="showPage('home')">
-    <span>🏠</span>
-    Home
-  </button>
+    <section id="notificationsPage" class="page">
 
-  <button onclick="showPage('friends')">
-    <span>👥</span>
-    Friends
-  </button>
+      <div class="card">
 
-  <button onclick="openPostModal()">
-    <span>➕</span>
-    Post
-  </button>
+        <h2 style="margin-bottom:10px">
+          Notifications 🔔
+        </h2>
 
-  <button onclick="showPage('chat')">
-    <span>💬</span>
-    Chat
-  </button>
+        <div class="empty">
+          No new notifications.
+        </div>
 
-  <button onclick="showPage('menu')">
-    <span>☰</span>
-    Menu
-  </button>
+      </div>
 
-</nav>
+    </section>
 
-</div>
-<!-- EDIT PROFILE MODAL -->
-<div id="editProfileModal" class="modal">
 
-  <div class="modal-box">
+    <!-- PROFILE -->
 
-    <button class="close"
-            onclick="closeEditProfile()">×</button>
+    <section id="profilePage" class="page">
 
-    <h2>Edit Profile</h2>
+      <div class="profile-card">
 
-    <input
-      id="editFullName"
-      type="text"
-      placeholder="Full name"
-      style="width:100%;padding:13px;margin:15px 0 10px;border:1px solid #ddd;border-radius:7px;">
+        <div
+          id="coverPhoto"
+          class="profile-cover">
 
-    <input
-      id="editUsername"
-      type="text"
-      placeholder="Username"
-      style="width:100%;padding:13px;margin-bottom:10px;border:1px solid #ddd;border-radius:7px;">
+          <button
+            class="cover-button"
+            onclick="document.getElementById('coverInput').click()">
+            🖼️ Cover
+          </button>
 
-    <textarea
-      id="editBio"
-      placeholder="Write something about yourself..."
-      style="width:100%;min-height:100px;padding:13px;border:1px solid #ddd;border-radius:7px;">
-    </textarea>
+          <input
+            id="coverInput"
+            class="file-input"
+            type="file"
+            accept="image/*"
+            style="display:none"
+            onchange="uploadCover(event)">
 
-    <button class="primary"
-            onclick="saveProfile()">
-      💾 Save Profile
+        </div>
+
+
+        <div class="profile-info">
+
+          <div
+            id="profileAvatar"
+            class="profile-avatar">
+            K
+          </div>
+
+          <input
+            id="avatarInput"
+            type="file"
+            accept="image/*"
+            style="display:none"
+            onchange="uploadAvatar(event)">
+
+          <button
+            onclick="document.getElementById('avatarInput').click()"
+            style="
+              margin-top:8px;
+              background:#e4e6eb;
+              padding:8px 12px;
+              border-radius:7px;">
+            📷 Change Profile Photo
+          </button>
+
+
+          <div
+            id="profileName"
+            class="profile-name">
+            KidusBook User
+          </div>
+
+          <div
+            id="profileUsername"
+            class="profile-username">
+            @username
+          </div>
+
+          <div
+            id="profileEmail"
+            style="margin-top:8px">
+          </div>
+
+          <div
+            id="profileBio"
+            class="bio">
+          </div>
+
+          <button
+            class="edit-btn"
+            onclick="openEditProfile()">
+            ✏️ Edit Profile
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- CHAT -->
+
+    <section id="chatPage" class="page">
+
+      <div class="card">
+
+        <h2>Messenger 💬</h2>
+
+        <div class="empty">
+          Messenger is ready for future conversations.
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- FRIENDS -->
+
+    <section id="friendsPage" class="page">
+
+      <div class="card">
+
+        <h2>Friends 👥</h2>
+
+        <div class="empty">
+          No friends yet.
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- SETTINGS -->
+
+    <section id="settingsPage" class="page">
+
+      <div class="card">
+
+        <h2 style="margin-bottom:10px">
+          Settings ⚙️
+        </h2>
+
+        <div class="menu-item">
+          Account
+        </div>
+
+        <div class="menu-item">
+          Privacy
+        </div>
+
+        <div class="menu-item">
+          Notifications
+        </div>
+
+        <div class="menu-item">
+          Language: English
+        </div>
+
+        <div class="menu-item">
+          About KidusBook v1.0
+        </div>
+
+        <div class="menu-item">
+
+          <button
+            onclick="logout()"
+            style="
+              background:#e41e3f;
+              color:white;
+              padding:10px 20px;
+              border-radius:7px;">
+            🚪 Log Out
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- BOTTOM NAV -->
+
+  <nav class="bottom-nav">
+
+    <button
+      id="navHome"
+      class="nav-btn active"
+      onclick="showPage('homePage')">
+      🏠
+      <span>Home</span>
     </button>
 
-    <div id="profileMessage"></div>
+    <button
+      id="navFriends"
+      class="nav-btn"
+      onclick="showPage('friendsPage')">
+      👥
+      <span>Friends</span>
+    </button>
 
-  </div>
+    <button
+      id="navChat"
+      class="nav-btn"
+      onclick="showPage('chatPage')">
+      💬
+      <span>Chat</span>
+    </button>
+
+    <button
+      id="navProfile"
+      class="nav-btn"
+      onclick="showPage('profilePage');loadProfile()">
+      👤
+      <span>Profile</span>
+    </button>
+
+    <button
+      id="navSettings"
+      class="nav-btn"
+      onclick="showPage('settingsPage')">
+      ⚙️
+      <span>Settings</span>
+    </button>
+
+  </nav>
 
 </div>
 
-<!-- POST MODAL -->
+
+<!-- ================= CREATE POST MODAL ================= -->
+
 <div id="postModal" class="modal">
 
   <div class="modal-box">
 
-    <button class="close"
-            onclick="closePostModal()">×</button>
+    <div class="modal-title">
 
-    <h2>Create Post</h2>
+      <h3>Create Post</h3>
 
-    <textarea id="postText"
+      <button
+        class="close"
+        onclick="closePostModal()">
+        ✕
+      </button>
+
+    </div>
+
+    <textarea
+      id="postContent"
       placeholder="What's on your mind?"></textarea>
 
-    <button class="primary"
-            onclick="publishPost()">
+    <button
+      class="primary"
+      onclick="publishPost()">
       Publish
     </button>
+
+    <div
+      id="postMessage"
+      style="text-align:center;margin-top:10px">
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- ================= EDIT PROFILE MODAL ================= -->
+
+<div id="editProfileModal" class="modal">
+
+  <div class="modal-box">
+
+    <div class="modal-title">
+
+      <h3>Edit Profile</h3>
+
+      <button
+        class="close"
+        onclick="closeEditProfile()">
+        ✕
+      </button>
+
+    </div>
+
+    <input
+      id="editFullName"
+      class="search-input"
+      placeholder="Full name">
+
+    <input
+      id="editUsername"
+      class="search-input"
+      placeholder="Username">
+
+    <textarea
+      id="editBio"
+      placeholder="Bio"
+      style="
+        width:100%;
+        min-height:100px;
+        padding:12px;
+        border:1px solid #ddd;
+        border-radius:8px;">
+    </textarea>
+
+    <button
+      class="primary"
+      onclick="saveProfile()">
+      Save Profile
+    </button>
+
+    <div
+      id="profileMessage"
+      style="text-align:center;margin-top:10px">
+    </div>
 
   </div>
 
@@ -692,17 +990,13 @@ button{cursor:pointer;border:0}
 
 <script>
 
-/* ================================
+/* =====================================================
    SUPABASE CONNECTION
-================================ */
+===================================================== */
 
 const SUPABASE_URL =
 "https://sipwqfbdqfbcbhlktpot.supabase.co";
 
-/*
-  PASTE YOUR SUPABASE PUBLISHABLE KEY
-  BETWEEN THE QUOTES BELOW.
-*/
 const SUPABASE_KEY =
 "sb_publishable_MbsvbLUiRc3pU7DVxuJ7wQ_sA3xpgBn";
 
@@ -713,32 +1007,35 @@ supabase.createClient(
 );
 
 
-/* ================================
+/* =====================================================
    AUTH SCREEN
-================================ */
+===================================================== */
 
 function showSignup(){
 
-  document.getElementById("loginForm")
-    .style.display="none";
+  document.getElementById("loginForm").style.display="none";
 
-  document.getElementById("signupForm")
-    .style.display="block";
+  document.getElementById("signupForm").style.display="block";
+
+  document.getElementById("authMessage").innerText="";
+
 }
+
 
 function showLogin(){
 
-  document.getElementById("signupForm")
-    .style.display="none";
+  document.getElementById("signupForm").style.display="none";
 
-  document.getElementById("loginForm")
-    .style.display="block";
+  document.getElementById("loginForm").style.display="block";
+
+  document.getElementById("authMessage").innerText="";
+
 }
 
 
-/* ================================
+/* =====================================================
    SIGN UP
-================================ */
+===================================================== */
 
 async function signup(){
 
@@ -755,82 +1052,103 @@ async function signup(){
     document.getElementById("signupPassword").value;
 
   const message =
-    document.getElementById("signupMessage");
+    document.getElementById("authMessage");
 
-  message.className="";
-  message.innerHTML="";
 
   if(!name || !username || !email || !password){
 
-    message.className="error";
-    message.innerHTML="Please complete all fields.";
+    message.innerText =
+      "Please fill in all fields.";
 
     return;
   }
+
 
   if(password.length < 6){
 
-    message.className="error";
-    message.innerHTML="Password must be at least 6 characters.";
+    message.innerText =
+      "Password must be at least 6 characters.";
 
     return;
   }
 
-  const {data,error} =
+
+  message.innerText =
+    "Creating account...";
+
+
+  const {
+    data,
+    error
+  } =
     await supabaseClient.auth.signUp({
+
       email:email,
+
       password:password
+
     });
+
 
   if(error){
 
-    message.className="error";
-    message.innerHTML=error.message;
+    message.innerText =
+      error.message;
 
     return;
   }
+
 
   if(!data.user){
 
-    message.className="error";
-    message.innerHTML="Account could not be created.";
+    message.innerText =
+      "Account creation failed.";
 
     return;
   }
 
-  const {error:profileError} =
+
+  const {
+    error:profileError
+  } =
     await supabaseClient
       .from("profiles")
-      .insert({
+      .upsert({
+
         id:data.user.id,
+
         username:username,
-        full_name:name
+
+        full_name:name,
+
+        bio:""
+
       });
+
 
   if(profileError){
 
-    message.className="error";
-    message.innerHTML=profileError.message;
+    console.log(profileError);
+
+    message.innerText =
+      "Account created, but profile setup failed: "
+      + profileError.message;
 
     return;
   }
 
-  message.className="success";
 
-  message.innerHTML =
+  message.style.color="green";
+
+  message.innerText =
     "Account created successfully!";
 
-  setTimeout(()=>{
-
-    showLogin();
-
-  },1200);
 }
 
 
-/* ================================
+/* =====================================================
    LOGIN
-================================ */
+===================================================== */
 
 async function login(){
 
@@ -841,91 +1159,127 @@ async function login(){
     document.getElementById("loginPassword").value;
 
   const message =
-    document.getElementById("loginMessage");
+    document.getElementById("authMessage");
 
-  message.className="";
-  message.innerHTML="";
 
   if(!email || !password){
 
-    message.className="error";
-    message.innerHTML="Enter your email and password.";
+    message.style.color="#d00";
+
+    message.innerText =
+      "Please enter your email and password.";
 
     return;
   }
 
-  const {error} =
+
+  message.style.color="#1877f2";
+
+  message.innerText =
+    "Logging in...";
+
+
+  const {
+    data,
+    error
+  } =
     await supabaseClient.auth.signInWithPassword({
+
       email:email,
+
       password:password
+
     });
+
 
   if(error){
 
-    message.className="error";
-    message.innerHTML=error.message;
+    console.log(error);
+
+    message.style.color="#d00";
+
+    message.innerText =
+      error.message;
 
     return;
   }
 
-  await startApp();
+
+  if(data.session){
+
+    message.innerText =
+      "Login successful!";
+
+    await startApp();
+
+  }
+
 }
 
 
-/* ================================
+/* =====================================================
    LOGOUT
-================================ */
+===================================================== */
 
 async function logout(){
 
   await supabaseClient.auth.signOut();
 
-  document.getElementById("app")
-    .style.display="none";
+  document.getElementById("app").style.display="none";
 
-  document.getElementById("authScreen")
-    .style.display="flex";
+  document.getElementById("authScreen").style.display="flex";
 
   showLogin();
+
 }
 
 
-/* ================================
+/* =====================================================
    START APP
-================================ */
+===================================================== */
 
 async function startApp(){
 
-  const {
-    data:{user}
-  } = await supabaseClient.auth.getUser();
+  document.getElementById("authScreen").style.display="none";
 
-  if(!user)return;
+  document.getElementById("app").style.display="block";
 
-  document.getElementById("authScreen")
-    .style.display="none";
-
-  document.getElementById("app")
-    .style.display="block";
-
-  await loadProfile(user.id);
+  await loadProfile();
 
   await loadPosts();
+
 }
 
 
-/* ================================
+/* =====================================================
    PROFILE
-================================ */
+===================================================== */
 
-async function loadProfile(userId){
+async function loadProfile(){
 
-  const {data,error} =
+  const {
+    data:{user}
+  } =
+    await supabaseClient.auth.getUser();
+
+
+  if(!user) return;
+
+
+  document.getElementById("profileEmail").innerText =
+    user.email || "";
+
+
+  const {
+    data,
+    error
+  } =
     await supabaseClient
       .from("profiles")
       .select("*")
-      .eq("id",userId)
-      .single();
+      .eq("id",user.id)
+      .maybeSingle();
+
 
   if(error){
 
@@ -934,289 +1288,89 @@ async function loadProfile(userId){
     return;
   }
 
-  document.getElementById("welcomeName")
-    .innerText =
-    "Welcome, " + data.full_name + "! 👋";
 
-  document.getElementById("profileName")
-    .innerText=data.full_name;
+  if(!data) return;
 
-  document.getElementById("profileUsername")
-    .innerText="@" + data.username;
 
-  document.getElementById("profileBio")
-    .innerText=data.bio || "Welcome to KidusBook.";
+  const name =
+    data.full_name ||
+    "KidusBook User";
 
-  document.getElementById("profileEmail")
-    .innerText="Account email connected";
 
-  const first =
-    data.full_name.charAt(0).toUpperCase();
-  if(data.cover_url){
+  const username =
+    data.username ||
+    "username";
 
-  document.getElementById("coverPhoto")
-    .style.backgroundImage =
-    `url("${data.cover_url}")`;
-}
+
+  document.getElementById("profileName").innerText =
+    name;
+
+
+  document.getElementById("profileUsername").innerText =
+    "@" + username;
+
+
+  document.getElementById("profileBio").innerText =
+    data.bio || "";
+
 
   const avatar =
-  document.getElementById("profileAvatar");
-
-if(data.avatar_url){
-
-  avatar.innerHTML =
-    `<img src="${data.avatar_url}"
-      style="width:100%;height:100%;border-radius:50%;object-fit:cover;">`;
-
-}else{
-
-  avatar.innerText=first;
-}
-
-document.getElementById("createAvatar")
-  .innerText=first;
-}
+    document.getElementById("profileAvatar");
 
 
-/* ================================
-   LOAD POSTS
-================================ */
+  if(data.avatar_url){
 
-async function loadPosts(){
+    avatar.innerHTML =
+      `<img src="${escapeHTML(data.avatar_url)}" alt="Profile">`;
 
-  const {data,error} =
-    await supabaseClient
-      .from("posts")
-      .select(`
-        id,
-        content,
-        created_at,
-        user_id,
-        profiles (
-          username,
-          full_name
-        )
-      `)
-      .order("created_at",{ascending:false});
+  }else{
 
-  const container =
-    document.getElementById("posts");
-
-  if(error){
-
-    console.log(error);
-
-    container.innerHTML=`
-      <div class="card">
-        <div class="menu-item">
-          Unable to load posts.
-        </div>
-      </div>
-    `;
-
-    return;
-  }
-
-  if(!data.length){
-
-    container.innerHTML=`
-      <div class="card">
-        <div class="menu-item">
-          No posts yet. Be the first to post! 🎉
-        </div>
-      </div>
-    `;
-
-    return;
-  }
-
-  container.innerHTML="";
-
-  data.forEach(post=>{
-
-    const name =
-      post.profiles?.full_name ||
-      "KidusBook User";
-
-    const letter =
+    avatar.innerText =
       name.charAt(0).toUpperCase();
 
-    container.innerHTML += `
-
-      <div class="card post">
-
-        <div class="post-head">
-
-          <div class="avatar">
-            ${letter}
-          </div>
-
-          <div>
-
-            <div class="post-user">
-              ${escapeHTML(name)}
-            </div>
-
-            <div class="post-time">
-              Public
-            </div>
-
-          </div>
-
-        </div>
-
-        <div class="post-text">
-          ${escapeHTML(post.content)}
-        </div>
-
-      <div class="actions">
-
-  <button onclick="toggleLike('${post.id}')">
-    ❤️ <span id="like-${post.id}">Like</span>
-  </button>
-
-  <button onclick="showComments('${post.id}')">
-    💬 Comment
-  </button>
-
-async function loadPosts(){
-
-  const {data,error} =
-    await supabaseClient
-      .from("posts")
-      .select(`
-        id,
-        content,
-        created_at,
-        user_id,
-        profiles (
-          username,
-          full_name
-        )
-      `)
-      .order("created_at",{ascending:false});
-
-  const container =
-    document.getElementById("posts");
-
-  if(error){
-
-    console.log(error);
-
-    container.innerHTML=`
-      <div class="card">
-        <div class="menu-item">
-          Unable to load posts.
-        </div>
-      </div>
-    `;
-
-    return;
   }
 
-  if(!data.length){
 
-    container.innerHTML=`
-      <div class="card">
-        <div class="menu-item">
-          No posts yet. Be the first to post! 🎉
-        </div>
-      </div>
-    `;
+  const homeAvatar =
+    document.getElementById("homeAvatar");
 
-    return;
-  }
 
-  container.innerHTML="";
+  if(data.avatar_url){
 
-  data.forEach(post=>{
+    homeAvatar.innerHTML =
+      `<img src="${escapeHTML(data.avatar_url)}"
+       style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
 
-    const name =
-      post.profiles?.full_name ||
-      "KidusBook User";
+  }else{
 
-    const letter =
+    homeAvatar.innerText =
       name.charAt(0).toUpperCase();
 
-    container.innerHTML += `
+  }
 
-      <div class="card post">
 
-        <div class="post-head">
+  if(data.cover_url){
 
-          <div class="avatar">
-            ${letter}
-          </div>
+    document.getElementById("coverPhoto")
+      .style.backgroundImage =
+      `url("${data.cover_url}")`;
 
-          <div>
+  }
 
-            <div class="post-user">
-              ${escapeHTML(name)}
-            </div>
-
-            <div class="post-time">
-              Public
-            </div>
-
-          </div>
-
-        </div>
-
-        <div class="post-text">
-          ${escapeHTML(post.content)}
-        </div>
-
-        <div class="actions">
-
-          <button onclick="toggleLike('${post.id}')">
-            ❤️ <span id="like-${post.id}">Like</span>
-          </button>
-
-          <button onclick="showComments('${post.id}')">
-            💬 Comment
-          </button>
-
-          <button onclick="sharePost('${escapeHTML(post.content)}')">
-            ↗️ Share
-          </button>
-
-        </div>
-
-        <div id="comments-${post.id}"
-             style="padding:10px 0 0;">
-        </div>
-
-      </div>
-    `;
-
-    /* UPDATE LIKE COUNT */
-    updateLikeCount(post.id);
-
-  });
 }
 
 
+/* =====================================================
+   EDIT PROFILE
+===================================================== */
 
-/* ================================
-   CREATE POST
-================================ */
-
-async function publishPost(){
-
-  const text =
-    document.getElementById("postText")
-      .value.trim();
-
-  if(!text){
-
-    alert("Please write something.");
-
-    return;
-  }
+async function openEditProfile(){
 
   const {
     data:{user}
-  } = await supabaseClient.auth.getUser();
+  } =
+    await supabaseClient.auth.getUser();
+
 
   if(!user){
 
@@ -1225,13 +1379,193 @@ async function publishPost(){
     return;
   }
 
-  const {error} =
+
+  const {
+    data
+  } =
     await supabaseClient
-      .from("posts")
-      .insert({
-        user_id:user.id,
-        content:text
-      });
+      .from("profiles")
+      .select("*")
+      .eq("id",user.id)
+      .maybeSingle();
+
+
+  document.getElementById("editFullName").value =
+    data?.full_name || "";
+
+
+  document.getElementById("editUsername").value =
+    data?.username || "";
+
+
+  document.getElementById("editBio").value =
+    data?.bio || "";
+
+
+  document.getElementById("editProfileModal")
+    .style.display="flex";
+
+}
+
+
+function closeEditProfile(){
+
+  document.getElementById("editProfileModal")
+    .style.display="none";
+
+}
+
+
+async function saveProfile(){
+
+  const {
+    data:{user}
+  } =
+    await supabaseClient.auth.getUser();
+
+
+  if(!user){
+
+    alert("Please log in first.");
+
+    return;
+  }
+
+
+  const full_name =
+    document.getElementById("editFullName")
+      .value.trim();
+
+
+  const username =
+    document.getElementById("editUsername")
+      .value.trim();
+
+
+  const bio =
+    document.getElementById("editBio")
+      .value.trim();
+
+
+  const message =
+    document.getElementById("profileMessage");
+
+
+  const {
+    error
+  } =
+    await supabaseClient
+      .from("profiles")
+      .update({
+
+        full_name:full_name,
+
+        username:username,
+
+        bio:bio
+
+      })
+      .eq("id",user.id);
+
+
+  if(error){
+
+    message.style.color="#d00";
+
+    message.innerText =
+      error.message;
+
+    return;
+  }
+
+
+  message.style.color="green";
+
+  message.innerText =
+    "Profile saved successfully!";
+
+
+  await loadProfile();
+
+  setTimeout(closeEditProfile,800);
+
+}
+
+
+/* =====================================================
+   PROFILE PHOTO
+===================================================== */
+
+async function uploadAvatar(event){
+
+  const file =
+    event.target.files[0];
+
+  if(!file) return;
+
+
+  const {
+    data:{user}
+  } =
+    await supabaseClient.auth.getUser();
+
+
+  if(!user){
+
+    alert("Please log in first.");
+
+    return;
+  }
+
+
+  const filePath =
+    user.id +
+    "/" +
+    Date.now() +
+    "_" +
+    file.name.replace(/\s+/g,"_");
+
+
+  const {
+    error:uploadError
+  } =
+    await supabaseClient.storage
+      .from("avatars")
+      .upload(filePath,file);
+
+
+  if(uploadError){
+
+    alert(uploadError.message);
+
+    return;
+  }
+
+
+  const {
+    data:urlData
+  } =
+    supabaseClient.storage
+      .from("avatars")
+      .getPublicUrl(filePath);
+
+
+  const avatarUrl =
+    urlData.publicUrl;
+
+
+  const {
+    error
+  } =
+    await supabaseClient
+      .from("profiles")
+      .update({
+
+        avatar_url:avatarUrl
+
+      })
+      .eq("id",user.id);
+
 
   if(error){
 
@@ -1240,97 +1574,411 @@ async function publishPost(){
     return;
   }
 
-  closePostModal();
 
-  await loadPosts();
+  await loadProfile();
+
+  alert("Profile photo updated successfully!");
+
+
 }
 
 
-/* ================================
-   SHARE
-================================ */
+/* =====================================================
+   COVER PHOTO
+===================================================== */
 
-function sharePost(text){
+async function uploadCover(event){
 
-  if(navigator.share){
+  const file =
+    event.target.files[0];
 
-    navigator.share({
-      title:"KidusBook",
-      text:text,
-      url:window.location.href
-    });
+  if(!file) return;
 
-  }else{
 
-    navigator.clipboard.writeText(text);
+  const {
+    data:{user}
+  } =
+    await supabaseClient.auth.getUser();
 
-    alert("Post copied!");
+
+  if(!user){
+
+    alert("Please log in first.");
+
+    return;
+  }
+
+
+  const filePath =
+    user.id +
+    "/cover_" +
+    Date.now() +
+    "_" +
+    file.name.replace(/\s+/g,"_");
+
+
+  const {
+    error:uploadError
+  } =
+    await supabaseClient.storage
+      .from("avatars")
+      .upload(filePath,file);
+
+
+  if(uploadError){
+
+    alert(uploadError.message);
+
+    return;
+  }
+
+
+  const {
+    data:urlData
+  } =
+    supabaseClient.storage
+      .from("avatars")
+      .getPublicUrl(filePath);
+
+
+  const coverUrl =
+    urlData.publicUrl;
+
+
+  const {
+    error
+  } =
+    await supabaseClient
+      .from("profiles")
+      .update({
+
+        cover_url:coverUrl
+
+      })
+      .eq("id",user.id);
+
+
+  if(error){
+
+    alert(error.message);
+
+    return;
+  }
+
+
+  document.getElementById("coverPhoto")
+    .style.backgroundImage =
+    `url("${coverUrl}")`;
+
+
+  alert("Cover photo updated successfully!");
+
+}
+
+
+/* =====================================================
+   LOAD POSTS
+===================================================== */
+
+async function loadPosts(){
+
+  const container =
+    document.getElementById("posts");
+
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("posts")
+      .select(`
+        id,
+        content,
+        created_at,
+        user_id
+      `)
+      .order("created_at",{ascending:false});
+
+
+  if(error){
+
+    console.log(error);
+
+    container.innerHTML=`
+      <div class="card">
+        Unable to load posts.<br><br>
+        ${escapeHTML(error.message)}
+      </div>
+    `;
+
+    return;
+  }
+
+
+  if(!data || !data.length){
+
+    container.innerHTML=`
+      <div class="card empty">
+        No posts yet. Be the first to post! 🎉
+      </div>
+    `;
+
+    return;
+  }
+
+
+  container.innerHTML="";
+
+
+  for(const post of data){
+
+    let name="KidusBook User";
+
+    let avatarUrl="";
+
+
+    const {
+      data:profile
+    } =
+      await supabaseClient
+        .from("profiles")
+        .select("full_name,username,avatar_url")
+        .eq("id",post.user_id)
+        .maybeSingle();
+
+
+    if(profile){
+
+      name =
+        profile.full_name ||
+        profile.username ||
+        "KidusBook User";
+
+      avatarUrl =
+        profile.avatar_url || "";
+
+    }
+
+
+    const letter =
+      name.charAt(0).toUpperCase();
+
+
+    const avatarHTML =
+      avatarUrl
+      ?
+      `<img src="${escapeHTML(avatarUrl)}"
+       alt="Avatar">`
+      :
+      letter;
+
+
+    container.innerHTML += `
+
+      <div class="card post">
+
+        <div class="post-head">
+
+          <div class="avatar">
+            ${avatarHTML}
+          </div>
+
+          <div>
+
+            <div class="post-user">
+              ${escapeHTML(name)}
+            </div>
+
+            <div class="post-time">
+              Public · ${formatDate(post.created_at)}
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="post-text">
+          ${escapeHTML(post.content)}
+        </div>
+
+
+        <div class="actions">
+
+          <button onclick="toggleLike('${post.id}')">
+            ❤️ <span id="like-${post.id}">
+              Like
+            </span>
+          </button>
+
+
+          <button onclick="showComments('${post.id}')">
+            💬 Comment
+          </button>
+
+
+          <button onclick="sharePost('${escapeHTML(post.content)}')">
+            ↗️ Share
+          </button>
+
+        </div>
+
+
+        <div
+          id="comments-${post.id}"
+          class="comment-box">
+        </div>
+
+      </div>
+
+    `;
+
+
+    await updateLikeCount(post.id);
 
   }
+
 }
 
 
-/* ================================
-   NAVIGATION
-================================ */
-
-function showPage(page){
-
-  document
-    .querySelectorAll(".page")
-    .forEach(p=>p.classList.remove("active"));
-
-  const selected =
-    document.getElementById(page);
-
-  if(selected)
-    selected.classList.add("active");
-
-  window.scrollTo(0,0);
-}
-
-
-/* ================================
-   POST MODAL
-================================ */
+/* =====================================================
+   CREATE POST
+===================================================== */
 
 function openPostModal(){
 
-  document
-    .getElementById("postModal")
-    .classList.add("show");
+  document.getElementById("postContent").value="";
 
-  document
-    .getElementById("postText")
-    .focus();
+  document.getElementById("postMessage").innerText="";
+
+  document.getElementById("postModal")
+    .style.display="flex";
+
 }
+
 
 function closePostModal(){
 
-  document
-    .getElementById("postModal")
-    .classList.remove("show");
+  document.getElementById("postModal")
+    .style.display="none";
 
-  document
-    .getElementById("postText")
-    .value="";
 }
-/* ================================
+
+
+async function publishPost(){
+
+  const content =
+    document.getElementById("postContent")
+      .value.trim();
+
+
+  const message =
+    document.getElementById("postMessage");
+
+
+  if(!content){
+
+    message.style.color="#d00";
+
+    message.innerText =
+      "Please write something.";
+
+    return;
+  }
+
+
+  const {
+    data:{user}
+  } =
+    await supabaseClient.auth.getUser();
+
+
+  if(!user){
+
+    message.style.color="#d00";
+
+    message.innerText =
+      "Please log in first.";
+
+    return;
+  }
+
+
+  message.style.color="#1877f2";
+
+  message.innerText =
+    "Publishing...";
+
+
+  const {
+    error
+  } =
+    await supabaseClient
+      .from("posts")
+      .insert({
+
+        user_id:user.id,
+
+        content:content
+
+      });
+
+
+  if(error){
+
+    console.log(error);
+
+    message.style.color="#d00";
+
+    message.innerText =
+      error.message;
+
+    return;
+  }
+
+
+  message.style.color="green";
+
+  message.innerText =
+    "Post published!";
+
+
+  document.getElementById("postContent").value="";
+
+
+  await loadPosts();
+
+
+  setTimeout(closePostModal,600);
+
+}
+
+
+/* =====================================================
    LIKES
-================================ */
+===================================================== */
 
 async function toggleLike(postId){
 
   const {
     data:{user}
-  } = await supabaseClient.auth.getUser();
+  } =
+    await supabaseClient.auth.getUser();
+
 
   if(!user){
+
     alert("Please log in first.");
+
     return;
   }
 
-  const {data:existing,error:checkError} =
+
+  const {
+    data:existing,
+    error:checkError
+  } =
     await supabaseClient
       .from("likes")
       .select("id")
@@ -1338,151 +1986,234 @@ async function toggleLike(postId){
       .eq("user_id",user.id)
       .maybeSingle();
 
+
   if(checkError){
+
     alert(checkError.message);
+
     return;
   }
 
+
   if(existing){
 
-    const {error} =
+    const {
+      error
+    } =
       await supabaseClient
         .from("likes")
         .delete()
         .eq("id",existing.id);
 
+
     if(error){
+
       alert(error.message);
+
       return;
     }
 
   }else{
 
-    const {error} =
+    const {
+      error
+    } =
       await supabaseClient
         .from("likes")
         .insert({
+
           post_id:postId,
+
           user_id:user.id
+
         });
 
+
     if(error){
+
       alert(error.message);
+
       return;
     }
+
   }
 
+
   await updateLikeCount(postId);
+
 }
 
 
 async function updateLikeCount(postId){
 
-  const {count,error} =
+  const {
+    count,
+    error
+  } =
     await supabaseClient
       .from("likes")
-      .select("*",{count:"exact",head:true})
+      .select("*",{
+        count:"exact",
+        head:true
+      })
       .eq("post_id",postId);
 
-  if(error) return;
+
+  if(error){
+
+    console.log(error);
+
+    return;
+  }
+
 
   const button =
     document.getElementById("like-"+postId);
+
 
   if(button){
 
     button.innerText =
       count > 0
-        ? `${count} Like${count === 1 ? "" : "s"}`
-        : "Like";
+      ?
+      `${count} Like${count === 1 ? "" : "s"}`
+      :
+      "Like";
+
   }
+
 }
 
 
-/* ================================
+/* =====================================================
    COMMENTS
-================================ */
+===================================================== */
 
 async function showComments(postId){
 
   const box =
-    document.getElementById("comments-"+postId);
+    document.getElementById(
+      "comments-"+postId
+    );
+
 
   if(!box) return;
 
-  box.innerHTML="Loading comments...";
 
-  const {data,error} =
+  box.innerHTML =
+    "Loading comments...";
+
+
+  const {
+    data,
+    error
+  } =
     await supabaseClient
       .from("comments")
       .select(`
         id,
         content,
         created_at,
-        profiles (
-          full_name,
-          username
-        )
+        user_id
       `)
       .eq("post_id",postId)
       .order("created_at",{ascending:true});
 
+
   if(error){
 
+    console.log(error);
+
     box.innerHTML =
-      "Unable to load comments.";
+      "Unable to load comments.<br>" +
+      escapeHTML(error.message);
 
     return;
   }
 
+
   let html="";
 
-  data.forEach(comment=>{
 
-    const name =
-      comment.profiles?.full_name ||
-      "KidusBook User";
+  for(const comment of data){
+
+    let name="KidusBook User";
+
+
+    const {
+      data:profile
+    } =
+      await supabaseClient
+        .from("profiles")
+        .select("full_name,username")
+        .eq("id",comment.user_id)
+        .maybeSingle();
+
+
+    if(profile){
+
+      name =
+        profile.full_name ||
+        profile.username ||
+        "KidusBook User";
+
+    }
+
+
+    html += `
+
+      <div class="comment">
+
+        <strong>
+          ${escapeHTML(name)}
+        </strong>
+
+        <br>
+
+        ${escapeHTML(comment.content)}
+
+      </div>
+
+    `;
+
+  }
+
+
+  if(!data.length){
 
     html += `
       <div style="
-        background:#f0f2f5;
-        padding:8px 12px;
-        border-radius:15px;
-        margin:6px 0;
-      ">
-        <strong>${escapeHTML(name)}</strong><br>
-        ${escapeHTML(comment.content)}
+        color:#65676b;
+        font-size:14px;
+        margin:8px 0;">
+        No comments yet.
       </div>
     `;
-  });
+
+  }
+
 
   html += `
-    <div style="display:flex;gap:6px;margin-top:8px;">
+
+    <div class="comment-form">
+
       <input
         id="commentInput-${postId}"
         type="text"
-        placeholder="Write a comment..."
-        style="
-          flex:1;
-          padding:10px;
-          border:1px solid #ddd;
-          border-radius:20px;
-        ">
+        placeholder="Write a comment...">
 
       <button
-        onclick="addComment('${postId}')"
-        style="
-          background:#1877f2;
-          color:white;
-          padding:10px 14px;
-          border-radius:20px;
-        ">
+        onclick="addComment('${postId}')">
         Send
       </button>
+
     </div>
+
   `;
 
+
   box.innerHTML=html;
+
 }
 
 
@@ -1493,311 +2224,307 @@ async function addComment(postId){
       "commentInput-"+postId
     );
 
+
+  if(!input) return;
+
+
   const text =
     input.value.trim();
 
+
   if(!text) return;
+
 
   const {
     data:{user}
-  } = await supabaseClient.auth.getUser();
+  } =
+    await supabaseClient.auth.getUser();
+
 
   if(!user){
 
     alert("Please log in first.");
+
     return;
   }
 
-  const {error} =
+
+  const {
+    error
+  } =
     await supabaseClient
       .from("comments")
       .insert({
+
         post_id:postId,
+
         user_id:user.id,
+
         content:text
+
       });
+
 
   if(error){
 
     alert(error.message);
+
     return;
   }
 
+
   await showComments(postId);
+
 }
 
-/* ================================
+
+/* =====================================================
+   SHARE
+===================================================== */
+
+async function sharePost(text){
+
+  try{
+
+    if(navigator.share){
+
+      await navigator.share({
+
+        title:"KidusBook",
+
+        text:text
+
+      });
+
+    }else{
+
+      await navigator.clipboard.writeText(text);
+
+      alert("Post copied to clipboard!");
+
+    }
+
+  }catch(error){
+
+    console.log(error);
+
+  }
+
+}
+
+
+/* =====================================================
+   SEARCH USERS
+===================================================== */
+
+async function searchUsers(){
+
+  const search =
+    document.getElementById("searchInput")
+      .value.trim();
+
+
+  const results =
+    document.getElementById("searchResults");
+
+
+  if(!search){
+
+    results.innerHTML="";
+
+    return;
+  }
+
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("profiles")
+      .select("full_name,username,avatar_url")
+      .or(
+        `full_name.ilike.%${search}%,username.ilike.%${search}%`
+      )
+      .limit(20);
+
+
+  if(error){
+
+    results.innerHTML =
+      escapeHTML(error.message);
+
+    return;
+  }
+
+
+  if(!data.length){
+
+    results.innerHTML=`
+      <div class="empty">
+        No users found.
+      </div>
+    `;
+
+    return;
+  }
+
+
+  results.innerHTML="";
+
+
+  data.forEach(user=>{
+
+    const name =
+      user.full_name ||
+      user.username ||
+      "KidusBook User";
+
+
+    const letter =
+      name.charAt(0).toUpperCase();
+
+
+    results.innerHTML += `
+
+      <div style="
+        display:flex;
+        align-items:center;
+        gap:10px;
+        padding:10px 0;
+        border-bottom:1px solid #eee;">
+
+        <div class="avatar">
+
+          ${
+            user.avatar_url
+            ?
+            `<img src="${escapeHTML(user.avatar_url)}">`
+            :
+            letter
+          }
+
+        </div>
+
+        <div>
+
+          <strong>
+            ${escapeHTML(name)}
+          </strong>
+
+          <div style="color:#65676b">
+            @${escapeHTML(user.username || "")}
+          </div>
+
+        </div>
+
+      </div>
+
+    `;
+
+  });
+
+}
+
+
+/* =====================================================
+   NAVIGATION
+===================================================== */
+
+function showPage(pageId){
+
+  document.querySelectorAll(".page")
+    .forEach(page=>{
+      page.classList.remove("active");
+    });
+
+
+  const page =
+    document.getElementById(pageId);
+
+
+  if(page){
+
+    page.classList.add("active");
+
+  }
+
+
+  document.querySelectorAll(".nav-btn")
+    .forEach(btn=>{
+      btn.classList.remove("active");
+    });
+
+
+  if(pageId==="homePage")
+    document.getElementById("navHome")
+      .classList.add("active");
+
+
+  if(pageId==="friendsPage")
+    document.getElementById("navFriends")
+      .classList.add("active");
+
+
+  if(pageId==="chatPage")
+    document.getElementById("navChat")
+      .classList.add("active");
+
+
+  if(pageId==="profilePage")
+    document.getElementById("navProfile")
+      .classList.add("active");
+
+
+  if(pageId==="settingsPage")
+    document.getElementById("navSettings")
+      .classList.add("active");
+
+}
+
+
+/* =====================================================
+   DATE
+===================================================== */
+
+function formatDate(date){
+
+  if(!date) return "Just now";
+
+
+  const d =
+    new Date(date);
+
+
+  return d.toLocaleString();
+
+}
+
+
+/* =====================================================
    SECURITY
-================================ */
+===================================================== */
 
 function escapeHTML(text){
 
   return String(text)
+
     .replace(/&/g,"&amp;")
+
     .replace(/</g,"&lt;")
+
     .replace(/>/g,"&gt;")
+
     .replace(/"/g,"&quot;")
+
     .replace(/'/g,"&#039;");
-}
-/* ================================
-   EDIT PROFILE
-================================ */
 
-async function openEditProfile(){
-
-  const {
-    data:{user}
-  } = await supabaseClient.auth.getUser();
-
-  if(!user){
-    alert("Please log in first.");
-    return;
-  }
-
-  const {data,error} =
-    await supabaseClient
-      .from("profiles")
-      .select("full_name,username,bio")
-      .eq("id",user.id)
-      .single();
-
-  if(error){
-    alert(error.message);
-    return;
-  }
-
-  document.getElementById("editFullName").value =
-    data.full_name || "";
-
-  document.getElementById("editUsername").value =
-    data.username || "";
-
-  document.getElementById("editBio").value =
-    data.bio || "";
-
-  document.getElementById("profileMessage").innerHTML="";
-
-  document
-    .getElementById("editProfileModal")
-    .classList.add("show");
 }
 
 
-function closeEditProfile(){
-
-  document
-    .getElementById("editProfileModal")
-    .classList.remove("show");
-}
-
-
-async function saveProfile(){
-
-  const fullName =
-    document.getElementById("editFullName")
-      .value.trim();
-
-  const username =
-    document.getElementById("editUsername")
-      .value.trim();
-
-  const bio =
-    document.getElementById("editBio")
-      .value.trim();
-
-  const message =
-    document.getElementById("profileMessage");
-
-  if(!fullName || !username){
-
-    message.className="error";
-    message.innerHTML=
-      "Full name and username are required.";
-
-    return;
-  }
-
-  const {
-    data:{user}
-  } = await supabaseClient.auth.getUser();
-
-  if(!user){
-    message.className="error";
-    message.innerHTML="Please log in again.";
-    return;
-  }
-
-  const {error} =
-    await supabaseClient
-      .from("profiles")
-      .update({
-        full_name:fullName,
-        username:username,
-        bio:bio
-      })
-      .eq("id",user.id);
-
-  if(error){
-
-    message.className="error";
-    message.innerHTML=error.message;
-
-    return;
-  }
-
-  message.className="success";
-  message.innerHTML="Profile updated successfully! ✅";
-
-  await loadProfile(user.id);
-
-  setTimeout(()=>{
-    closeEditProfile();
-  },800);
-}
-/* ================================
-   PROFILE PHOTO
-================================ */
-
-async function uploadAvatar(){
-
-  const file =
-    document.getElementById("avatarFile").files[0];
-
-  if(!file) return;
-
-  if(!file.type.startsWith("image/")){
-    alert("Please select an image.");
-    return;
-  }
-
-  if(file.size > 5 * 1024 * 1024){
-    alert("Image must be smaller than 5 MB.");
-    return;
-  }
-
-  const {
-    data:{user}
-  } = await supabaseClient.auth.getUser();
-
-  if(!user){
-    alert("Please log in again.");
-    return;
-  }
-
-  const filePath =
-    user.id + "/" + Date.now() + "_" + file.name;
-
-  const {error:uploadError} =
-    await supabaseClient
-      .storage
-      .from("avatars")
-      .upload(filePath,file);
-
-  if(uploadError){
-    alert(uploadError.message);
-    return;
-  }
-
-  const {data:urlData} =
-    supabaseClient
-      .storage
-      .from("avatars")
-      .getPublicUrl(filePath);
-
-  const avatarUrl =
-    urlData.publicUrl;
-
-  const {error:updateError} =
-    await supabaseClient
-      .from("profiles")
-      .update({
-        avatar_url:avatarUrl
-      })
-      .eq("id",user.id);
-
-  if(updateError){
-    alert(updateError.message);
-    return;
-  }
-
-  await loadProfile(user.id);
-
-  alert("Profile photo updated successfully! 📷");
-}
-  /* ================================
-   COVER PHOTO
-================================ */
-
-async function uploadCover(){
-
-  const file =
-    document.getElementById("coverFile").files[0];
-
-  if(!file) return;
-
-  if(!file.type.startsWith("image/")){
-    alert("Please select an image.");
-    return;
-  }
-
-  if(file.size > 8 * 1024 * 1024){
-    alert("Cover photo must be smaller than 8 MB.");
-    return;
-  }
-
-  const {
-    data:{user}
-  } = await supabaseClient.auth.getUser();
-
-  if(!user){
-    alert("Please log in again.");
-    return;
-  }
-
-  const filePath =
-    user.id + "/cover_" + Date.now() + "_" + file.name;
-
-  const {error:uploadError} =
-    await supabaseClient
-      .storage
-      .from("avatars")
-      .upload(filePath,file);
-
-  if(uploadError){
-    alert(uploadError.message);
-    return;
-  }
-
-  const {data:urlData} =
-    supabaseClient
-      .storage
-      .from("avatars")
-      .getPublicUrl(filePath);
-
-  const coverUrl =
-    urlData.publicUrl;
-
-  const {error:updateError} =
-    await supabaseClient
-      .from("profiles")
-      .update({
-        cover_url:coverUrl
-      })
-      .eq("id",user.id);
-
-  if(updateError){
-    alert(updateError.message);
-    return;
-  }
-
-  document.getElementById("coverPhoto").style.backgroundImage =
-    `url("${coverUrl}")`;
-
-  alert("Cover photo updated successfully! 🖼️");
-}
-/* ================================
-   CHECK EXISTING LOGIN
-================================ */
+/* =====================================================
+   CHECK EXISTING SESSION
+===================================================== */
 
 supabaseClient.auth
   .getSession()
@@ -1810,6 +2537,29 @@ supabaseClient.auth
     }
 
   });
+
+
+/* =====================================================
+   AUTH STATE LISTENER
+===================================================== */
+
+supabaseClient.auth
+  .onAuthStateChange(
+    async(event,session)=>{
+
+      if(event==="SIGNED_OUT"){
+
+        document.getElementById("app")
+          .style.display="none";
+
+        document.getElementById("authScreen")
+          .style.display="flex";
+
+      }
+
+    }
+  );
+
 
 </script>
 
