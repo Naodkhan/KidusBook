@@ -1069,13 +1069,110 @@ async function loadPosts(){
           ${escapeHTML(post.content)}
         </div>
 
+      <div class="actions">
+
+  <button onclick="toggleLike('${post.id}')">
+    ❤️ <span id="like-${post.id}">Like</span>
+  </button>
+
+  <button onclick="showComments('${post.id}')">
+    💬 Comment
+  </button>
+
+async function loadPosts(){
+
+  const {data,error} =
+    await supabaseClient
+      .from("posts")
+      .select(`
+        id,
+        content,
+        created_at,
+        user_id,
+        profiles (
+          username,
+          full_name
+        )
+      `)
+      .order("created_at",{ascending:false});
+
+  const container =
+    document.getElementById("posts");
+
+  if(error){
+
+    console.log(error);
+
+    container.innerHTML=`
+      <div class="card">
+        <div class="menu-item">
+          Unable to load posts.
+        </div>
+      </div>
+    `;
+
+    return;
+  }
+
+  if(!data.length){
+
+    container.innerHTML=`
+      <div class="card">
+        <div class="menu-item">
+          No posts yet. Be the first to post! 🎉
+        </div>
+      </div>
+    `;
+
+    return;
+  }
+
+  container.innerHTML="";
+
+  data.forEach(post=>{
+
+    const name =
+      post.profiles?.full_name ||
+      "KidusBook User";
+
+    const letter =
+      name.charAt(0).toUpperCase();
+
+    container.innerHTML += `
+
+      <div class="card post">
+
+        <div class="post-head">
+
+          <div class="avatar">
+            ${letter}
+          </div>
+
+          <div>
+
+            <div class="post-user">
+              ${escapeHTML(name)}
+            </div>
+
+            <div class="post-time">
+              Public
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="post-text">
+          ${escapeHTML(post.content)}
+        </div>
+
         <div class="actions">
 
-          <button onclick="alert('Like feature coming next ❤️')">
-            ❤️ Like
+          <button onclick="toggleLike('${post.id}')">
+            ❤️ <span id="like-${post.id}">Like</span>
           </button>
 
-          <button onclick="alert('Comment feature coming next 💬')">
+          <button onclick="showComments('${post.id}')">
             💬 Comment
           </button>
 
@@ -1085,10 +1182,19 @@ async function loadPosts(){
 
         </div>
 
+        <div id="comments-${post.id}"
+             style="padding:10px 0 0;">
+        </div>
+
       </div>
     `;
+
+    /* UPDATE LIKE COUNT */
+    updateLikeCount(post.id);
+
   });
 }
+
 
 
 /* ================================
@@ -1209,7 +1315,216 @@ function closePostModal(){
     .getElementById("postText")
     .value="";
 }
+/* ================================
+   LIKES
+================================ */
 
+async function toggleLike(postId){
+
+  const {
+    data:{user}
+  } = await supabaseClient.auth.getUser();
+
+  if(!user){
+    alert("Please log in first.");
+    return;
+  }
+
+  const {data:existing,error:checkError} =
+    await supabaseClient
+      .from("likes")
+      .select("id")
+      .eq("post_id",postId)
+      .eq("user_id",user.id)
+      .maybeSingle();
+
+  if(checkError){
+    alert(checkError.message);
+    return;
+  }
+
+  if(existing){
+
+    const {error} =
+      await supabaseClient
+        .from("likes")
+        .delete()
+        .eq("id",existing.id);
+
+    if(error){
+      alert(error.message);
+      return;
+    }
+
+  }else{
+
+    const {error} =
+      await supabaseClient
+        .from("likes")
+        .insert({
+          post_id:postId,
+          user_id:user.id
+        });
+
+    if(error){
+      alert(error.message);
+      return;
+    }
+  }
+
+  await updateLikeCount(postId);
+}
+
+
+async function updateLikeCount(postId){
+
+  const {count,error} =
+    await supabaseClient
+      .from("likes")
+      .select("*",{count:"exact",head:true})
+      .eq("post_id",postId);
+
+  if(error) return;
+
+  const button =
+    document.getElementById("like-"+postId);
+
+  if(button){
+
+    button.innerText =
+      count > 0
+        ? `${count} Like${count === 1 ? "" : "s"}`
+        : "Like";
+  }
+}
+
+
+/* ================================
+   COMMENTS
+================================ */
+
+async function showComments(postId){
+
+  const box =
+    document.getElementById("comments-"+postId);
+
+  if(!box) return;
+
+  box.innerHTML="Loading comments...";
+
+  const {data,error} =
+    await supabaseClient
+      .from("comments")
+      .select(`
+        id,
+        content,
+        created_at,
+        profiles (
+          full_name,
+          username
+        )
+      `)
+      .eq("post_id",postId)
+      .order("created_at",{ascending:true});
+
+  if(error){
+
+    box.innerHTML =
+      "Unable to load comments.";
+
+    return;
+  }
+
+  let html="";
+
+  data.forEach(comment=>{
+
+    const name =
+      comment.profiles?.full_name ||
+      "KidusBook User";
+
+    html += `
+      <div style="
+        background:#f0f2f5;
+        padding:8px 12px;
+        border-radius:15px;
+        margin:6px 0;
+      ">
+        <strong>${escapeHTML(name)}</strong><br>
+        ${escapeHTML(comment.content)}
+      </div>
+    `;
+  });
+
+  html += `
+    <div style="display:flex;gap:6px;margin-top:8px;">
+      <input
+        id="commentInput-${postId}"
+        type="text"
+        placeholder="Write a comment..."
+        style="
+          flex:1;
+          padding:10px;
+          border:1px solid #ddd;
+          border-radius:20px;
+        ">
+
+      <button
+        onclick="addComment('${postId}')"
+        style="
+          background:#1877f2;
+          color:white;
+          padding:10px 14px;
+          border-radius:20px;
+        ">
+        Send
+      </button>
+    </div>
+  `;
+
+  box.innerHTML=html;
+}
+
+
+async function addComment(postId){
+
+  const input =
+    document.getElementById(
+      "commentInput-"+postId
+    );
+
+  const text =
+    input.value.trim();
+
+  if(!text) return;
+
+  const {
+    data:{user}
+  } = await supabaseClient.auth.getUser();
+
+  if(!user){
+
+    alert("Please log in first.");
+    return;
+  }
+
+  const {error} =
+    await supabaseClient
+      .from("comments")
+      .insert({
+        post_id:postId,
+        user_id:user.id,
+        content:text
+      });
+
+  if(error){
+
+    alert(error.message);
+    return;
+  }
+
+  await showComments(postId);
+}
 
 /* ================================
    SECURITY
