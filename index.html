@@ -446,10 +446,18 @@ button{cursor:pointer;border:0}
 
       <h2 id="profileName">User</h2>
 
-      <p id="profileUsername"></p>
+  <p id="profileUsername"></p>
 
-    </div>
+<button
+  class="primary"
+  style="max-width:220px;margin-top:15px;"
+  onclick="openEditProfile()">
+  ✏️ Edit Profile
+</button>
 
+</div>    
+
+      
   </div>
 
   <div class="card">
@@ -578,7 +586,44 @@ button{cursor:pointer;border:0}
 </nav>
 
 </div>
+<!-- EDIT PROFILE MODAL -->
+<div id="editProfileModal" class="modal">
 
+  <div class="modal-box">
+
+    <button class="close"
+            onclick="closeEditProfile()">×</button>
+
+    <h2>Edit Profile</h2>
+
+    <input
+      id="editFullName"
+      type="text"
+      placeholder="Full name"
+      style="width:100%;padding:13px;margin:15px 0 10px;border:1px solid #ddd;border-radius:7px;">
+
+    <input
+      id="editUsername"
+      type="text"
+      placeholder="Username"
+      style="width:100%;padding:13px;margin-bottom:10px;border:1px solid #ddd;border-radius:7px;">
+
+    <textarea
+      id="editBio"
+      placeholder="Write something about yourself..."
+      style="width:100%;min-height:100px;padding:13px;border:1px solid #ddd;border-radius:7px;">
+    </textarea>
+
+    <button class="primary"
+            onclick="saveProfile()">
+      💾 Save Profile
+    </button>
+
+    <div id="profileMessage"></div>
+
+  </div>
+
+</div>
 
 <!-- POST MODAL -->
 <div id="postModal" class="modal">
@@ -1120,7 +1165,121 @@ function escapeHTML(text){
     .replace(/"/g,"&quot;")
     .replace(/'/g,"&#039;");
 }
+/* ================================
+   EDIT PROFILE
+================================ */
 
+async function openEditProfile(){
+
+  const {
+    data:{user}
+  } = await supabaseClient.auth.getUser();
+
+  if(!user){
+    alert("Please log in first.");
+    return;
+  }
+
+  const {data,error} =
+    await supabaseClient
+      .from("profiles")
+      .select("full_name,username,bio")
+      .eq("id",user.id)
+      .single();
+
+  if(error){
+    alert(error.message);
+    return;
+  }
+
+  document.getElementById("editFullName").value =
+    data.full_name || "";
+
+  document.getElementById("editUsername").value =
+    data.username || "";
+
+  document.getElementById("editBio").value =
+    data.bio || "";
+
+  document.getElementById("profileMessage").innerHTML="";
+
+  document
+    .getElementById("editProfileModal")
+    .classList.add("show");
+}
+
+
+function closeEditProfile(){
+
+  document
+    .getElementById("editProfileModal")
+    .classList.remove("show");
+}
+
+
+async function saveProfile(){
+
+  const fullName =
+    document.getElementById("editFullName")
+      .value.trim();
+
+  const username =
+    document.getElementById("editUsername")
+      .value.trim();
+
+  const bio =
+    document.getElementById("editBio")
+      .value.trim();
+
+  const message =
+    document.getElementById("profileMessage");
+
+  if(!fullName || !username){
+
+    message.className="error";
+    message.innerHTML=
+      "Full name and username are required.";
+
+    return;
+  }
+
+  const {
+    data:{user}
+  } = await supabaseClient.auth.getUser();
+
+  if(!user){
+    message.className="error";
+    message.innerHTML="Please log in again.";
+    return;
+  }
+
+  const {error} =
+    await supabaseClient
+      .from("profiles")
+      .update({
+        full_name:fullName,
+        username:username,
+        bio:bio
+      })
+      .eq("id",user.id);
+
+  if(error){
+
+    message.className="error";
+    message.innerHTML=error.message;
+
+    return;
+  }
+
+  message.className="success";
+  message.innerHTML="Profile updated successfully! ✅";
+
+  await loadProfile(user.id);
+
+  setTimeout(()=>{
+    closeEditProfile();
+  },800);
+}
 
 /* ================================
    CHECK EXISTING LOGIN
