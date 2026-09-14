@@ -1,1 +1,896 @@
+Absolutely. Here is the complete KidusBook V1 as one file. Replace everything inside your current index.html with this code.
+Writing
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KidusBook</title>
 
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:Arial,Helvetica,sans-serif;
+  background:#f0f2f5;
+  color:#1c1e21;
+}
+button,input,textarea{font:inherit}
+button{cursor:pointer;border:0}
+
+.header{
+  position:sticky;
+  top:0;
+  z-index:100;
+  height:60px;
+  background:#1877f2;
+  color:white;
+  display:flex;
+  align-items:center;
+  padding:0 15px;
+  box-shadow:0 2px 6px #999;
+}
+.logo{
+  font-size:25px;
+  font-weight:bold;
+  margin-right:auto;
+}
+.header-icons{
+  display:flex;
+  gap:8px;
+}
+.header-icons button{
+  width:40px;
+  height:40px;
+  border-radius:50%;
+  background:#fff;
+  color:#1877f2;
+  font-size:20px;
+}
+
+.container{
+  width:100%;
+  max-width:680px;
+  margin:auto;
+  padding:15px 10px 80px;
+}
+
+.page{display:none}
+.page.active{display:block}
+
+.card{
+  background:white;
+  border-radius:10px;
+  margin-bottom:12px;
+  box-shadow:0 1px 3px #ccc;
+  overflow:hidden;
+}
+
+.welcome{
+  padding:20px;
+  text-align:center;
+}
+.welcome h1{
+  color:#1877f2;
+  margin-bottom:6px;
+}
+
+.create{
+  padding:12px;
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+.avatar{
+  width:45px;
+  height:45px;
+  border-radius:50%;
+  background:#1877f2;
+  color:white;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-weight:bold;
+}
+.create-input{
+  flex:1;
+  background:#f0f2f5;
+  border-radius:25px;
+  padding:13px 18px;
+  color:#65676b;
+  cursor:pointer;
+}
+
+.post{
+  padding:15px;
+}
+.post-head{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.post-user{
+  font-weight:bold;
+}
+.post-time{
+  font-size:12px;
+  color:#65676b;
+  margin-top:3px;
+}
+.post-text{
+  padding:15px 0;
+  line-height:1.5;
+  white-space:pre-wrap;
+}
+.post-stats{
+  border-bottom:1px solid #ddd;
+  padding:8px 0;
+  color:#65676b;
+  display:flex;
+  justify-content:space-between;
+}
+.actions{
+  display:flex;
+  padding-top:5px;
+}
+.actions button{
+  flex:1;
+  background:white;
+  padding:10px;
+  color:#65676b;
+  font-weight:bold;
+  border-radius:6px;
+}
+.actions button:hover{
+  background:#f0f2f5;
+}
+.liked{color:#1877f2!important}
+
+.bottom{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  height:62px;
+  background:white;
+  border-top:1px solid #ddd;
+  display:flex;
+  justify-content:center;
+  z-index:100;
+}
+.bottom button{
+  flex:1;
+  max-width:120px;
+  background:white;
+  color:#65676b;
+  font-size:12px;
+}
+.bottom button span{
+  display:block;
+  font-size:23px;
+  margin-bottom:2px;
+}
+.bottom button.active{
+  color:#1877f2;
+}
+
+.title{
+  font-size:24px;
+  font-weight:bold;
+  margin:10px 0 15px;
+}
+
+.search-box{
+  display:flex;
+  gap:8px;
+  margin-bottom:15px;
+}
+.search-box input{
+  flex:1;
+  padding:13px;
+  border:1px solid #ddd;
+  border-radius:25px;
+  outline:none;
+}
+.search-box button{
+  background:#1877f2;
+  color:white;
+  border-radius:25px;
+  padding:0 18px;
+}
+
+.profile-cover{
+  height:150px;
+  background:linear-gradient(135deg,#1877f2,#42b72a);
+}
+.profile-info{
+  text-align:center;
+  padding:0 15px 20px;
+}
+.big-avatar{
+  width:100px;
+  height:100px;
+  margin:-50px auto 10px;
+  border:5px solid white;
+  border-radius:50%;
+  background:#1877f2;
+  color:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:40px;
+  font-weight:bold;
+}
+.profile-info h2{margin-bottom:5px}
+.profile-info p{color:#65676b}
+.profile-stats{
+  display:flex;
+  justify-content:space-around;
+  margin-top:18px;
+}
+.profile-stats b{
+  display:block;
+  font-size:20px;
+}
+
+.menu-item{
+  padding:17px;
+  border-bottom:1px solid #eee;
+  display:flex;
+  align-items:center;
+  gap:15px;
+}
+.menu-item:last-child{border:0}
+.menu-icon{font-size:23px}
+
+.notification{
+  padding:15px;
+  display:flex;
+  gap:12px;
+  align-items:center;
+}
+.unread{background:#e7f3ff}
+
+.chat-box{
+  height:360px;
+  overflow-y:auto;
+  padding:15px;
+}
+.message{
+  padding:10px 14px;
+  border-radius:18px;
+  margin:7px 0;
+  max-width:75%;
+  background:#e4e6eb;
+}
+.mine{
+  background:#1877f2;
+  color:white;
+  margin-left:auto;
+}
+.chat-input{
+  display:flex;
+  padding:10px;
+  border-top:1px solid #ddd;
+  gap:8px;
+}
+.chat-input input{
+  flex:1;
+  border:1px solid #ddd;
+  border-radius:20px;
+  padding:10px 15px;
+}
+.chat-input button{
+  background:#1877f2;
+  color:white;
+  border-radius:50%;
+  width:42px;
+}
+
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.55);
+  z-index:200;
+  align-items:center;
+  justify-content:center;
+  padding:15px;
+}
+.modal.show{display:flex}
+.modal-box{
+  background:white;
+  width:100%;
+  max-width:550px;
+  border-radius:12px;
+  padding:18px;
+}
+.modal-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-bottom:1px solid #ddd;
+  padding-bottom:12px;
+}
+.close{
+  width:35px;
+  height:35px;
+  border-radius:50%;
+  background:#eee;
+  font-size:20px;
+}
+.modal textarea{
+  width:100%;
+  min-height:180px;
+  border:0;
+  outline:0;
+  resize:none;
+  padding:18px 5px;
+  font-size:17px;
+}
+.publish{
+  width:100%;
+  background:#1877f2;
+  color:white;
+  padding:12px;
+  border-radius:7px;
+  font-weight:bold;
+}
+
+.comment-area{
+  display:none;
+  padding-top:10px;
+}
+.comment-area.show{display:block}
+.comment-input{
+  display:flex;
+  gap:7px;
+}
+.comment-input input{
+  flex:1;
+  padding:10px;
+  border:1px solid #ddd;
+  border-radius:20px;
+}
+.comment-input button{
+  background:#1877f2;
+  color:white;
+  border-radius:20px;
+  padding:0 15px;
+}
+.comment{
+  background:#f0f2f5;
+  padding:8px 12px;
+  border-radius:15px;
+  margin-top:7px;
+  display:inline-block;
+  max-width:90%;
+}
+
+@media(max-width:500px){
+  .logo{font-size:22px}
+  .container{padding-top:10px}
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+  <div class="logo">KidusBook</div>
+  <div class="header-icons">
+    <button onclick="showPage('search')">🔍</button>
+    <button onclick="showPage('notifications')">🔔</button>
+    <button onclick="showPage('profile')">👤</button>
+  </div>
+</header>
+
+<main class="container">
+
+<!-- HOME -->
+<section id="home" class="page active">
+
+  <div class="card welcome">
+    <h1>Welcome to KidusBook</h1>
+    <p>Connect with friends and share your world.</p>
+  </div>
+
+  <div class="card create">
+    <div class="avatar">K</div>
+    <div class="create-input" onclick="openPostModal()">
+      What's on your mind?
+    </div>
+  </div>
+
+  <div id="posts"></div>
+
+</section>
+
+<!-- SEARCH -->
+<section id="search" class="page">
+  <div class="title">Search</div>
+  <div class="search-box">
+    <input id="searchInput" placeholder="Search KidusBook...">
+    <button onclick="doSearch()">Search</button>
+  </div>
+  <div id="searchResults"></div>
+</section>
+
+<!-- PROFILE -->
+<section id="profile" class="page">
+  <div class="card">
+    <div class="profile-cover"></div>
+    <div class="profile-info">
+      <div class="big-avatar">K</div>
+      <h2>Kidus</h2>
+      <p>@kidus</p>
+
+      <div class="profile-stats">
+        <div><b id="postCount">0</b>Posts</div>
+        <div><b>0</b>Friends</div>
+        <div><b>0</b>Followers</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="menu-item">
+      <span class="menu-icon">👤</span>
+      <span>Edit Profile</span>
+    </div>
+    <div class="menu-item">
+      <span class="menu-icon">📷</span>
+      <span>Add Profile Photo</span>
+    </div>
+  </div>
+</section>
+
+<!-- NOTIFICATIONS -->
+<section id="notifications" class="page">
+  <div class="title">Notifications</div>
+
+  <div class="card">
+    <div class="notification unread">
+      <div class="avatar">K</div>
+      <div>
+        <b>Welcome to KidusBook!</b>
+        <div>Start connecting with people.</div>
+        <small>Just now</small>
+      </div>
+    </div>
+
+    <div class="notification">
+      <div>❤️</div>
+      <div>New notifications will appear here.</div>
+    </div>
+  </div>
+</section>
+
+<!-- MESSENGER -->
+<section id="messenger" class="page">
+  <div class="title">Messenger</div>
+
+  <div class="card">
+    <div class="chat-box" id="chatBox">
+      <div class="message">Welcome to KidusBook Messenger 👋</div>
+    </div>
+
+    <div class="chat-input">
+      <input id="messageInput" placeholder="Write a message...">
+      <button onclick="sendMessage()">➤</button>
+    </div>
+  </div>
+</section>
+
+<!-- FRIENDS -->
+<section id="friends" class="page">
+  <div class="title">Friends</div>
+
+  <div class="card">
+    <div class="menu-item">
+      <div class="avatar">K</div>
+      <div>
+        <b>Find Friends</b><br>
+        <small>Search for people on KidusBook</small>
+      </div>
+    </div>
+
+    <div class="menu-item">
+      👥 Your friend list is empty.
+    </div>
+  </div>
+</section>
+
+<!-- SETTINGS -->
+<section id="settings" class="page">
+  <div class="title">Settings</div>
+
+  <div class="card">
+    <div class="menu-item">👤 Account</div>
+    <div class="menu-item">🔒 Privacy</div>
+    <div class="menu-item">🔔 Notifications</div>
+    <div class="menu-item">🌐 Language — English</div>
+    <div class="menu-item">ℹ️ About KidusBook — Version 1.0</div>
+  </div>
+</section>
+
+</main>
+
+<!-- BOTTOM NAVIGATION -->
+<nav class="bottom">
+  <button class="active" onclick="showPage('home',this)">
+    <span>🏠</span>Home
+  </button>
+
+  <button onclick="showPage('friends',this)">
+    <span>👥</span>Friends
+  </button>
+
+  <button onclick="openPostModal()">
+    <span>➕</span>Post
+  </button>
+
+  <button onclick="showPage('messenger',this)">
+    <span>💬</span>Chat
+  </button>
+
+  <button onclick="showPage('settings',this)">
+    <span>☰</span>Menu
+  </button>
+</nav>
+
+<!-- CREATE POST MODAL -->
+<div class="modal" id="postModal">
+  <div class="modal-box">
+
+    <div class="modal-head">
+      <h2>Create Post</h2>
+      <button class="close" onclick="closePostModal()">×</button>
+    </div>
+
+    <textarea id="postText"
+      placeholder="What's on your mind?"></textarea>
+
+    <button class="publish" onclick="publishPost()">
+      Publish
+    </button>
+
+  </div>
+</div>
+
+<script>
+
+let posts = [
+  {
+    id:1,
+    user:"Kidus",
+    text:"Welcome to KidusBook! 🎉 This is our new social network.",
+    likes:3,
+    comments:[]
+  },
+  {
+    id:2,
+    user:"KidusBook User",
+    text:"Hello everyone! 👋 Nice to meet you all.",
+    likes:5,
+    comments:[]
+  }
+];
+
+function showPage(page,btn){
+
+  document.querySelectorAll(".page")
+    .forEach(p=>p.classList.remove("active"));
+
+  document.getElementById(page)
+    .classList.add("active");
+
+  document.querySelectorAll(".bottom button")
+    .forEach(b=>b.classList.remove("active"));
+
+  if(btn) btn.classList.add("active");
+
+  window.scrollTo(0,0);
+}
+
+function openPostModal(){
+  document.getElementById("postModal").classList.add("show");
+  document.getElementById("postText").focus();
+}
+
+function closePostModal(){
+  document.getElementById("postModal").classList.remove("show");
+  document.getElementById("postText").value="";
+}
+
+function escapeHTML(text){
+  return text
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+function renderPosts(){
+
+  const container=document.getElementById("posts");
+
+  container.innerHTML="";
+
+  posts.slice().reverse().forEach(post=>{
+
+    const commentsHTML=post.comments.map(c=>`
+      <div class="comment">
+        <b>${escapeHTML(c.user)}</b><br>
+        ${escapeHTML(c.text)}
+      </div>
+    `).join("");
+
+    container.innerHTML += `
+
+      <div class="card post">
+
+        <div class="post-head">
+          <div class="avatar">
+            ${post.user.charAt(0)}
+          </div>
+
+          <div>
+            <div class="post-user">
+              ${escapeHTML(post.user)}
+            </div>
+
+            <div class="post-time">
+              Public · Just now
+            </div>
+          </div>
+        </div>
+
+        <div class="post-text">
+          ${escapeHTML(post.text)}
+        </div>
+
+        <div class="post-stats">
+          <span>❤️ ${post.likes}</span>
+          <span>${post.comments.length} comments</span>
+        </div>
+
+        <div class="actions">
+
+          <button id="like-${post.id}"
+            onclick="likePost(${post.id})">
+            ❤️ Like
+          </button>
+
+          <button onclick="toggleComments(${post.id})">
+            💬 Comment
+          </button>
+
+          <button onclick="sharePost(${post.id})">
+            ↗️ Share
+          </button>
+
+        </div>
+
+        <div id="comments-${post.id}" class="comment-area">
+
+          <div class="comment-input">
+            <input
+              id="comment-input-${post.id}"
+              placeholder="Write a comment..."
+            >
+
+            <button onclick="addComment(${post.id})">
+              Send
+            </button>
+          </div>
+
+          ${commentsHTML}
+
+        </div>
+
+      </div>
+    `;
+  });
+
+  document.getElementById("postCount").innerText=posts.length;
+}
+
+function publishPost(){
+
+  const text=document.getElementById("postText").value.trim();
+
+  if(!text){
+    alert("Please write something first.");
+    return;
+  }
+
+  posts.push({
+    id:Date.now(),
+    user:"Kidus",
+    text:text,
+    likes:0,
+    comments:[]
+  });
+
+  closePostModal();
+  renderPosts();
+  showPage("home");
+
+}
+
+function likePost(id){
+
+  const post=posts.find(p=>p.id===id);
+
+  if(!post)return;
+
+  post.likes++;
+
+  renderPosts();
+
+  const btn=document.getElementById("like-"+id);
+
+  if(btn) btn.classList.add("liked");
+}
+
+function toggleComments(id){
+
+  const area=document.getElementById("comments-"+id);
+
+  area.classList.toggle("show");
+}
+
+function addComment(id){
+
+  const input=document.getElementById("comment-input-"+id);
+
+  const text=input.value.trim();
+
+  if(!text)return;
+
+  const post=posts.find(p=>p.id===id);
+
+  post.comments.push({
+    user:"Kidus",
+    text:text
+  });
+
+  renderPosts();
+
+  document.getElementById("comments-"+id)
+    .classList.add("show");
+}
+
+function sharePost(id){
+
+  const post=posts.find(p=>p.id===id);
+
+  if(navigator.share){
+
+    navigator.share({
+      title:"KidusBook",
+      text:post.text
+    });
+
+  }else{
+
+    navigator.clipboard.writeText(post.text);
+
+    alert("Post text copied!");
+
+  }
+}
+
+function doSearch(){
+
+  const query=document
+    .getElementById("searchInput")
+    .value
+    .toLowerCase()
+    .trim();
+
+  const result=document.getElementById("searchResults");
+
+  if(!query){
+
+    result.innerHTML=`
+      <div class="card">
+        <div class="menu-item">
+          🔎 Type something to search.
+        </div>
+      </div>
+    `;
+
+    return;
+  }
+
+  const found=posts.filter(p=>
+    p.text.toLowerCase().includes(query) ||
+    p.user.toLowerCase().includes(query)
+  );
+
+  if(!found.length){
+
+    result.innerHTML=`
+      <div class="card">
+        <div class="menu-item">
+          No results found.
+        </div>
+      </div>
+    `;
+
+    return;
+  }
+
+  result.innerHTML=found.map(p=>`
+    <div class="card post">
+      <div class="post-head">
+        <div class="avatar">${p.user.charAt(0)}</div>
+        <b>${escapeHTML(p.user)}</b>
+      </div>
+      <div class="post-text">${escapeHTML(p.text)}</div>
+    </div>
+  `).join("");
+}
+
+function sendMessage(){
+
+  const input=document.getElementById("messageInput");
+
+  const text=input.value.trim();
+
+  if(!text)return;
+
+  const chat=document.getElementById("chatBox");
+
+  chat.innerHTML += `
+    <div class="message mine">
+      ${escapeHTML(text)}
+    </div>
+  `;
+
+  input.value="";
+
+  chat.scrollTop=chat.scrollHeight;
+
+  setTimeout(()=>{
+
+    chat.innerHTML += `
+      <div class="message">
+        Thanks for your message! 👋
+      </div>
+    `;
+
+    chat.scrollTop=chat.scrollHeight;
+
+  },700);
+}
+
+document.getElementById("messageInput")
+.addEventListener("keydown",function(e){
+
+  if(e.key==="Enter"){
+    sendMessage();
+  }
+
+});
+
+renderPosts();
+
+</script>
+
+</body>
+</html>
+📱 Put it into GitHub
+Since you're working from your Android phone:
+Open your KidusBook GitHub repository.
+Open index.html.
+Tap Edit ✏️.
+Select all the old code and delete it.
+Copy the complete code above.
+Paste it into index.html.
+Scroll down and tap Commit changes.
+Open your GitHub Pages website.
+After that, KidusBook V1 should be live in the browser.
+This is the foundation. The next major step can be real user registration/login + database + real profiles + real posts + real friends + real Messenger, so it behaves much more like an actual social network rather than only a browser prototype.
